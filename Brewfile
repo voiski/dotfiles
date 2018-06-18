@@ -19,8 +19,8 @@ brew 'zsh'
 brew 'zsh-completions'
 
 # Development
-brew 'php'
-brew 'mysql'
+# brew 'php'
+# brew 'mysql'
 brew 'node'
 
 # Apps
@@ -28,30 +28,34 @@ cask 'aerial'
 cask 'alfred'
 cask 'caffeine'
 cask 'docker'
-cask 'eid-be'
-cask 'eid-be-viewer'
+#cask 'eid-be'
+#cask 'eid-be-viewer'
 cask 'firefox'
 cask 'google-backup-and-sync'
 cask 'google-chrome'
 cask 'gpgtools'
+cask 'gimp'
 cask 'grammarly'
 cask 'insomnia'
 cask 'java'
-cask 'mysqlworkbench'
-cask 'now'
-cask 'phpstorm'
-cask 'quip'
-cask 'sequel-pro'
-cask 'shuttle'
+# cask 'mysqlworkbench'
+# cask 'now'
+# cask 'phpstorm'
+# cask 'quip'
+cask 'rescuetime'
+# cask 'sequel-pro'
+# cask 'shuttle' # Maybe in the future
 cask 'slack'
 cask 'sublime-text'
-cask 'torbrowser'
-cask 'tower'
-cask 'transmit'
+# cask 'torbrowser'
+# cask 'tower'
+cask 'sourcetree'
+# cask 'transmit'
 cask 'vagrant'
 cask 'virtualbox'
 cask 'virtualbox-extension-pack'
 cask 'vlc'
+cask 'vscode'
 
 # Quicklook
 cask 'qlcolorcode'
@@ -67,13 +71,13 @@ cask 'font-source-sans-pro'
 cask 'font-source-serif-pro'
 
 # Install Mac App Store apps
-mas '1Password', id: 1333542190
-mas 'Byword', id: 420212497
-mas 'Deckset', id: 847496013
-mas 'Giphy Capture', id: 668208984
-mas 'Sip', id: 507257563
-mas 'Spark', id: 1176895641
+# mas '1Password', id: 1333542190
+# mas 'Byword', id: 420212497
+# mas 'Deckset', id: 847496013
+# mas 'Giphy Capture', id: 668208984
+# mas 'Sip', id: 507257563
+# mas 'Spark', id: 1176895641
 mas 'The Unarchiver', id: 425424353
-mas 'Things', id: 904280696
-mas 'Tweetbot', id: 1384080005
-mas 'WhatsApp', id: 1147396723 
+# mas 'Things', id: 904280696
+# mas 'Tweetbot', id: 1384080005
+# mas 'WhatsApp', id: 1147396723 
