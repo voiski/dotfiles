@@ -1,0 +1,14 @@
+{
+	"installed_packages":
+	[
+		"Alignment",
+		"Case Conversion",
+		"Dockerfile Syntax Highlighting",
+		"FileDiffs",
+		"MarkdownPreview",
+		"Material Theme",
+		"Material Theme - Appbar",
+		"Oceanic Next Color Scheme",
+		"Pretty JSON"
+	]
+}

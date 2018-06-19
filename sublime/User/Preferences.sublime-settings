@@ -1,0 +1,36 @@
+{
+	"Ignored_packages":
+	[
+		"Vintage"
+	],
+	"Indent_guide_options":
+	[
+		"draw_normal",
+		"draw_active"
+	],
+	"Rulers":
+	[
+		80,
+		100,
+		120
+	],
+	"_draw_white_space": "all",
+	"bold_folder_labels": true,
+	"color_scheme": "Packages/Oceanic Next Color Scheme/Oceanic Next.tmTheme",
+	"detect_indentation": false,
+	"ensure_newline_at_eof_on_save": true,
+	"font_size": 10,
+	"ignored_packages":
+	[
+		"Vintage"
+	],
+	"indent_to_bracket": true,
+	"material_theme_compact_sidebar": true,
+	"material_theme_small_statusbar": true,
+	"material_theme_small_tab": true,
+	"overlay_scroll_bars": "enabled",
+	"tab_size": 2,
+	"theme": "Material-Theme.sublime-theme",
+	"translate_tabs_to_spaces": true,
+	"trim_trailing_white_space_on_save": true
+}

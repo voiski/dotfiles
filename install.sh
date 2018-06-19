@@ -50,6 +50,9 @@ rm -rf $HOME/.zshrc $HOME/.zpreztorc
 ln -s $HOME/.dotfiles/.zshrc $HOME/.zshrc
 ln -s $HOME/.dotfiles/.zpreztorc $HOME/.zpreztorc
 
+# Restore sublime
+ln -s $HOME/.dotfiles/.sublime/User $HOME/Library/Application\ Support/Sublime\ Text\ 3/Packages/User
+
 # Symlink the Mackup config file to the home directory
 ln -s $HOME/.dotfiles/.mackup.cfg $HOME/.mackup.cfg
 
