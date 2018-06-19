@@ -12,6 +12,6 @@ fi
 
 # Customize to your needs...
 source $HOME/.dotfiles/aliases.zsh
-if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
+if [[ -s "$HOME/.dotfiles/confidential.zsh" ]]; then
   source $HOME/.dotfiles/confidential.zsh # no public backup
 fi
