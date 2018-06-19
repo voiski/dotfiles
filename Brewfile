@@ -54,8 +54,8 @@ cask 'sourcetree'
 cask 'vagrant'
 cask 'virtualbox'
 cask 'virtualbox-extension-pack'
+cask 'visual-studio-code'
 cask 'vlc'
-cask 'vscode'
 
 # Quicklook
 cask 'qlcolorcode'
