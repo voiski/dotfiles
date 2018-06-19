@@ -56,6 +56,10 @@ ln -s $HOME/.dotfiles/.sublime/User $HOME/Library/Application\ Support/Sublime\ 
 # Symlink the Mackup config file to the home directory
 ln -s $HOME/.dotfiles/.mackup.cfg $HOME/.mackup.cfg
 
+# Symlink the git config file to the home directory
+rm -f $HOME/.gitconfig
+ln -s $HOME/.dotfiles/.gitconfig $HOME/.gitconfig
+
 # Set macOS preferences
 # We will run this last because this will reload the shell
 source .macos
