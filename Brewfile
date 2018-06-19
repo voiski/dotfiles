@@ -11,13 +11,15 @@ brew 'bash' # Bash 4
 brew 'coreutils' # Those that come with macOS are outdated
 brew 'git'
 brew 'grep'
-brew 'wget'
+brew 'kubernetes-cli'
+brew 'kops'
 brew 'mackup'
 brew 'mas'
 brew 'trash'
 brew 'tree'
 brew 'zsh'
 brew 'zsh-completions'
+brew 'wget'
 
 # Development
 # brew 'php'
