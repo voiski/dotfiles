@@ -9,6 +9,7 @@ tap 'homebrew/bundle'
 brew 'awscli'
 brew 'bash' # Bash 4
 brew 'coreutils' # Those that come with macOS are outdated
+brew 'dep'
 brew 'git'
 brew 'grep'
 brew 'kubernetes-cli'
@@ -23,6 +24,7 @@ brew 'wget'
 
 # Development
 # brew 'php'
+brew 'go'
 # brew 'mysql'
 brew 'node'
 
