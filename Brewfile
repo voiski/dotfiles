@@ -12,6 +12,8 @@ brew 'coreutils' # Those that come with macOS are outdated
 brew 'dep'
 brew 'git'
 brew 'grep'
+brew 'hub'
+brew 'jq'
 brew 'kubernetes-cli'
 brew 'kops'
 brew 'mackup'
@@ -20,6 +22,8 @@ brew 'trash'
 brew 'tree'
 brew 'zsh'
 brew 'zsh-completions'
+brew 'yq'
+brew 'yamllint'
 brew 'wget'
 
 # Development

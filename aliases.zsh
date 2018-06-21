@@ -172,6 +172,8 @@ alias g.s.u='git svn rebase'
 alias g.l.branch='git rev-parse --abbrev-ref HEAD'
 alias g.l.repo_name='echo "${${${$(git remote get-url origin)#*:}%.git}#*.corp/}"'
 
+alias git=hub
+
 #################################
 #Run some script
 #################################
