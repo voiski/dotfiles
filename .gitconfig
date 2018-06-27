@@ -79,6 +79,15 @@
 		fi \
 	}; f"
 
+	# Get current branch
+	branch-current = rev-parse --abbrev-ref HEAD
+
+	# Get repo name
+	repo-name = "!basename $(git remote get-url origin)  #"
+
+	# Get repo user
+	repo-user = "!declare remote_url=$(git remote get-url origin);dirname ${remote_url##*:}  #"
+
 [apply]
 
 	# Detect whitespace errors when applying a patch
@@ -182,3 +191,6 @@
 [mergetool "sourcetree"]
 	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
 	trustExitCode = true
+
+[include]
+	path = ~/.dotfiles/.gitconfig.confidential
