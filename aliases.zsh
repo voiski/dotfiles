@@ -111,6 +111,11 @@ function find_rm(){ # find and remove
 function docker_bash(){ # up the container and enter in bash of it
   docker exec -it $1 bash
 }
+function docker_log(){ # internal logs
+	local pred='process matches ".*(ocker|vpnkit).*"
+  || (process in {"taskgated-helper", "launchservicesd", "kernel"} && eventMessage contains[c] "docker")'
+	/usr/bin/log stream --style syslog --level=debug --color=always --predicate "$pred"
+}
 
 function curl_json(){
   curl $*|python -m json.tool
@@ -124,6 +129,17 @@ function java_switch () { # Swith java version java_switch -v 1.7
   java -version
 }
 
+function kubectl_token() { # kubectl user credentials with OIDC
+  current_context=$(kubectl config current-context)
+	user_id=$(kubectl config view -o jsonpath="{.contexts[?(@.name == \"${current_context}\")].context.user}")
+	admin_user=$(kubectl config view -o jsonpath="{.users[?(@.name == \"${current_context}\")].user.username}")
+	admin_password=$(kubectl config view -o jsonpath="{.users[?(@.name == \"${current_context}\")].user.password}")
+	user_token=$(kubectl config view -o jsonpath="{.users[?(@.name == \"${user_id}\")].user.auth-provider.config.id-token}")
+  echo "Current context: $current_context
+  admin> user ${admin_user:-admin}: ${admin_password:-'n/a'}
+  OIDC> user ${user_id}: ${user_token}
+  "
+}
 
 
 #################################
@@ -191,7 +207,7 @@ alias c_wifi_stats='cat /proc/net/wireless'
 #################################
 # Open
 #################################
-alias o_file_aliases='subl ~/.bash_aliases'
+alias o_file_aliases='subl ~/.dotfile'
 alias o_file_hosts='subl /etc/hosts'
 alias o_file_ssh='subl ~/.ssh/config'
 alias o_file_aws='subl ~/.aws/credentials ~/.aws/config'

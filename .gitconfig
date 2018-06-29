@@ -88,6 +88,9 @@
 	# Get repo user
 	repo-user = "!declare remote_url=$(git remote get-url origin);dirname ${remote_url##*:}  #"
 
+	# Push to updstream
+	branch-push="!git push --set-upstream origin $(git branch-current) #"
+
 [apply]
 
 	# Detect whitespace errors when applying a patch
