@@ -12,8 +12,8 @@ fi
 
 # Customize to your needs...
 source $HOME/.dotfiles/aliases.zsh
-if [[ -s "$HOME/.dotfiles/confidential.zsh" ]]; then
-  source $HOME/.dotfiles/confidential.zsh # no public backup
+if [[ -s "$HOME/.dotfiles/dotfilesconfidential/aliases.zsh" ]]; then
+  source $HOME/.dotfiles/dotfilesconfidential/aliases.zsh # no public backup
 fi
 
 export GOPATH=$(go env GOPATH)

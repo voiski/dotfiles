@@ -1,0 +1,3 @@
+[submodule "dotfilesconfidential"]
+	path = dotfilesconfidential
+	url = git@gitlab.com:voiski/dotfilesconfidential.git

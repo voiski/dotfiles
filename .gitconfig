@@ -196,4 +196,4 @@
 	trustExitCode = true
 
 [include]
-	path = ~/.dotfiles/.gitconfig.confidential
+	path = ~/.dotfiles/dotfilesconfidential/.gitconfig
