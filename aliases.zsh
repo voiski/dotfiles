@@ -185,7 +185,7 @@ alias g.s.d='git svn dcommit'
 alias g.s.t='git svn tag'
 alias g.s.u='git svn rebase'
 
-alias git=hub
+alias stree="/Applications/SourceTree.app/Contents/Resources/stree"
 
 #################################
 #Run some script

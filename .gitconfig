@@ -1,3 +1,7 @@
+[user]
+	name = Alan Voiski
+	email = alannunesv@gmail.com
+
 [alias]
 
 	# View abbreviated SHA, description, and history graph of the latest 20 commits
@@ -90,6 +94,18 @@
 
 	# Push to updstream
 	branch-push="!git push --set-upstream origin $(git branch-current) #"
+
+	# Delete current branch and fetch master
+	branch-delete="!f(){ \
+		declare currentBranch=$(git branch-current); \
+		echo Delete ${currentBranch}?[y]; \
+		read option; \
+		if [ ${option} = 'y' ]; then \
+			git checkout master && \
+			git fetch --all --prune && \
+			git branch -D ${currentBranch}; \
+		fi; \
+	}; f #"
 
 [apply]
 

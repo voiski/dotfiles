@@ -8,6 +8,7 @@ tap 'homebrew/bundle'
 # Install Binaries
 brew 'awscli'
 brew 'bash' # Bash 4
+brew 'circleci'
 brew 'coreutils' # Those that come with macOS are outdated
 brew 'dep'
 brew 'git'
@@ -18,6 +19,7 @@ brew 'kubernetes-cli'
 brew 'kops'
 brew 'mackup'
 brew 'mas'
+brew 'telnet'
 brew 'trash'
 brew 'tree'
 brew 'zsh'
@@ -27,15 +29,16 @@ brew 'yamllint'
 brew 'wget'
 
 # Development
-# brew 'php'
 brew 'go'
-# brew 'mysql'
 brew 'node'
+brew 'terraform'
+brew 'rbenv'
 
 # Apps
 cask 'aerial'
 cask 'alfred'
 cask 'caffeine'
+cask 'chef/chef/chefdk'
 cask 'clocker'
 cask 'docker'
 #cask 'eid-be'
@@ -48,17 +51,10 @@ cask 'gimp'
 cask 'grammarly'
 cask 'insomnia'
 cask 'java'
-# cask 'mysqlworkbench'
-# cask 'now'
-# cask 'phpstorm'
-# cask 'quip'
 cask 'rescuetime'
-# cask 'sequel-pro'
 # cask 'shuttle' # Maybe in the future
 cask 'slack'
 cask 'sublime-text'
-# cask 'torbrowser'
-# cask 'tower'
 cask 'skype'
 cask 'sourcetree'
 # cask 'transmit'
@@ -88,7 +84,7 @@ cask 'font-source-serif-pro'
 # mas 'Giphy Capture', id: 668208984
 # mas 'Sip', id: 507257563
 # mas 'Spark', id: 1176895641
-mas 'The Unarchiver', id: 425424353
+# mas 'The Unarchiver', id: 425424353
 # mas 'Things', id: 904280696
 # mas 'Tweetbot', id: 1384080005
 # mas 'WhatsApp', id: 1147396723 

@@ -17,3 +17,4 @@ if [[ -s "$HOME/.dotfiles/dotfilesconfidential/aliases.zsh" ]]; then
 fi
 
 export GOPATH=$(go env GOPATH)
+eval "$(rbenv init -)"
