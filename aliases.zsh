@@ -141,6 +141,10 @@ function kubectl_token() { # kubectl user credentials with OIDC
   "
 }
 
+function cheat(){ # cheat https://github.com/chubin/cheat.sh
+	local x=${@:2}
+	curl https://cheat.sh/$1/${x/ /+}
+}
 
 #################################
 # Functions

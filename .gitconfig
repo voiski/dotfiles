@@ -1,3 +1,6 @@
+[init]
+	templatedir = ~/.dotfiles/.git-templates
+
 [user]
 	name = Alan Voiski
 	email = alannunesv@gmail.com
@@ -95,6 +98,9 @@
 	# Push to updstream
 	branch-push="!git push --set-upstream origin $(git branch-current) #"
 
+	# Install pre commit message template in existing local repo
+	install-commit-template = !ln -s ~/.dotfiles/.git-templates/hooks/prepare-commit-msg .git/hooks/prepare-commit-msg
+
 	# Delete current branch and fetch master
 	branch-delete="!f(){ \
 		declare currentBranch=$(git branch-current); \
@@ -103,6 +109,7 @@
 		if [ ${option} = 'y' ]; then \
 			git checkout master && \
 			git fetch --all --prune && \
+			git pull && \
 			git branch -D ${currentBranch}; \
 		fi; \
 	}; f #"
