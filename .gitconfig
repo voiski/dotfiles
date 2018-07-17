@@ -87,13 +87,23 @@
 	}; f"
 
 	# Get current branch
-	branch-current = rev-parse --abbrev-ref HEAD
+	branch-current = "!f(){  \
+		local branch=$(git rev-parse --abbrev-ref HEAD); \
+		[ $branch = 'HEAD' ] && git rev-parse --short HEAD \
+		|| echo $branch; \
+	}; f #"
 
 	# Get repo name
-	repo-name = "!basename $(git remote get-url origin)  #"
+	repo-name = "!x=$(git remote get-url origin) && x=$(basename $x) && echo ${x/.git/} #"
 
 	# Get repo user
-	repo-user = "!declare remote_url=$(git remote get-url origin);dirname ${remote_url##*:}  #"
+	repo-user = "!declare remote_url=$(git remote get-url origin);remote_url=$(dirname ${remote_url##*:});basename ${remote_url} #"
+
+	# Get repo server
+	repo-server = "!x=$(git remote get-url origin) && \
+	[[ $x = *@* ]] \
+	&& echo $x | cut -d'@' -f2 | cut -d':' -f1 \
+	|| echo $x | cut -d'/' -f3 | cut -d':' -f1"
 
 	# Push to updstream
 	branch-push="!git push --set-upstream origin $(git branch-current) #"
@@ -113,6 +123,15 @@
 			git branch -D ${currentBranch}; \
 		fi; \
 	}; f #"
+
+	# Open github for the current branch
+	github="!open https://$(git repo-server)/$(git repo-user)/$(git repo-name)/tree/$(git branch-current) #"
+
+	# Open github diff for the current branch
+	gitdiff="!open https://$(git repo-server)/$(git repo-user)/$(git repo-name)/compare/$(git branch-current) #"
+
+	# Open pr entry for the current branch
+	pr="!open https://$(git repo-server)/$(git repo-user)/$(git repo-name)/compare/$(git branch-current)?expand=1 #"
 
 [apply]
 
@@ -212,7 +231,7 @@
 # Sourcetree default configuration
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path =
+	path = 
 
 [mergetool "sourcetree"]
 	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
