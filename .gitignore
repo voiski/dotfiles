@@ -3,3 +3,4 @@ confidential.zsh
 sublime/User/Package\ Control.cache
 Package Control.last-run
 .gitconfig.confidential
+/istio-*/

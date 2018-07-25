@@ -60,6 +60,12 @@ ln -s $HOME/.dotfiles/.mackup.cfg $HOME/.mackup.cfg
 rm -f $HOME/.gitconfig
 ln -s $HOME/.dotfiles/.gitconfig $HOME/.gitconfig
 
+# TODO: Configure istio brew keg
+# Install istio
+curl -L https://git.io/getLatestIstio | sh -
+istio_base_path=$(find . -type dir -maxdepth 1 -name 'istio-*' | xargs basename)
+ln -s $HOME/.dotfiles/${istio_base_path}/bin/istioctl /usr/local/bin/istioctl
+
 # Set macOS preferences
 # We will run this last because this will reload the shell
 source .macos
