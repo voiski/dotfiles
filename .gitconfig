@@ -10,6 +10,9 @@
 	# View abbreviated SHA, description, and history graph of the latest 20 commits
 	l = log --pretty=oneline -n 20 --graph --abbrev-commit
 
+	# View full history in colorized/fancy log
+	history = log --graph --full-history --all --color --pretty=format:"%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20%s"
+
 	# View the current working tree status using the short format
 	s = status -s
 
@@ -132,6 +135,9 @@
 
 	# Open pr entry for the current branch
 	pr="!open https://$(git repo-server)/$(git repo-user)/$(git repo-name)/compare/$(git branch-current)?expand=1 #"
+
+	# Animated grapth of current grapth
+	gource="!gource -s 0.5 --hide dirnames,filenames --follow-user \"$(git config user.name)\" #"
 
 [apply]
 

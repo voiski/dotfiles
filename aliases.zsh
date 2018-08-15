@@ -166,7 +166,6 @@ alias g.c.undu='git reset --soft HEAD~' #git revert last commit
 alias g.g='gitg'
 alias g.k='gitk'
 alias g.m='git mv'
-alias g.o='gource -s 0.5 --hide dirnames,filenames --follow-user alannv'
 alias g.p='git push'
 alias g.p.force='git push --force-with-lease'
 alias g.r.c='git rm --cached'
@@ -181,13 +180,6 @@ function g.c.redu2(){ # git revert commit 'x' versions: g.c.redu2 number_value
 function g.t.d(){ # git delete tag and push this tag
   git tag -d $1;git push origin :refs/tags/$1
 }
-alias g.l='git log --graph --full-history --all --pretty=format:"%h%x09%d%x20%s"'
-alias g.log_color='git log --graph --full-history --all --color --pretty=format:"%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20%s"'
-
-#GIT-SVN
-alias g.s.d='git svn dcommit'
-alias g.s.t='git svn tag'
-alias g.s.u='git svn rebase'
 
 alias stree="/Applications/SourceTree.app/Contents/Resources/stree"
 
@@ -211,18 +203,18 @@ alias c_wifi_stats='cat /proc/net/wireless'
 #################################
 # Open
 #################################
-alias o_file_aliases='subl ~/.dotfile'
-alias o_file_hosts='subl /etc/hosts'
-alias o_file_ssh='subl ~/.ssh/config'
-alias o_file_aws='subl ~/.aws/credentials ~/.aws/config'
+alias o_file_aliases='r_text ~/.dotfile'
+alias o_file_hosts='r_text /etc/hosts'
+alias o_file_ssh='r_text ~/.ssh/config'
+alias o_file_aws='r_text ~/.aws/credentials ~/.aws/config'
 
 
 
 #################################
 # Who
 #################################
-alias w_alias='cat $HOME/.bash_aliases | grep alias'
-alias w_function='cat $HOME/.bash_aliases | grep function'
+alias w_alias='cat $HOME/.dotfiles/aliases.zsh | grep alias'
+alias w_function='cat $HOME/.dotfiles/aliases.zsh | grep function'
 
 
 
