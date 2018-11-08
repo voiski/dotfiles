@@ -7,12 +7,14 @@ tap 'homebrew/bundle'
 
 # Install Binaries
 brew 'asciinema'
+brew 'asciinema2gif'
 brew 'awscli'
 brew 'bash' # Bash 4
 brew 'circleci'
 brew 'coreutils' # Those that come with macOS are outdated
 brew 'ctop'
 brew 'dep'
+brew 'gettext'
 brew 'git'
 brew 'grep'
 brew 'hub'
@@ -41,6 +43,7 @@ brew 'terraform'
 brew 'rbenv'
 
 # Apps
+cask 'adobe-acrobat-reader'
 cask 'aerial'
 cask 'alfred'
 cask 'caffeine'
@@ -56,7 +59,9 @@ cask 'gpg-suite'
 cask 'gimp'
 cask 'grammarly'
 cask 'insomnia'
+cask 'iterm2'
 cask 'java'
+cask 'microsoft-remote-desktop-beta'
 cask 'minikube'
 cask 'rescuetime'
 # cask 'shuttle' # Maybe in the future
