@@ -1,6 +1,19 @@
-# Dries's Dotfiles
+# Voiski's Dotfiles
 
-## What Is This?
+This is a fork of original [driesvints/dotfiles](https://github.com/driesvints/dotfiles)
+that helped me to keep my mac config backup.
+
+I'm religious keeping all my environment changes in this repo.  To help on that,
+I'm also using symbolic links to keep some tool config files inside this
+repository. I'm not running it every time to validate those changes. I may have
+issues if I so, but it will be at least the better reference to recover my
+preferences in a new environment.
+
+A quick legend here since I'm keeping the original Dries' readme content:
+:repeat: Original Dries' sections
+:new: Mine contribution
+
+## What Is This? :repeat:
 
 This repository serves as my way to help me setup and maintain my Mac. It takes the effort out of installing everything manually. Everything which is needed to install my preffered setup of macOS is detailed in this readme. Feel free to explore, learn and copy parts for your own dotfiles. Enjoy! :smile:
 
@@ -8,7 +21,7 @@ Read the blog post: https://medium.com/@driesvints/getting-started-with-dotfiles
 
 ## A Fresh macOS Setup
 
-### Before you re-install
+### Before you re-install :repeat:
 
 First, go through the checklist below to make sure you didn't forget anything before you wipe your hard drive.
 
@@ -18,11 +31,11 @@ First, go through the checklist below to make sure you didn't forget anything be
 - Did you remember to export important data from your local database?
 - Did you update [mackup](https://github.com/lra/mackup) to the latest version and ran `mackup backup`?
 
-### Installing macOS cleanly
+### Installing macOS cleanly :repeat:
 
 After going to our checklist above and making sure you backed everything up, we're going to cleanly install macOS with the latest release. Follow [this article](https://www.imore.com/how-do-clean-install-macos) to cleanly install the latest macOS.
 
-### Setting up your Mac
+### Setting up your Mac :repeat:
 
 If you did all of the above you may now follow these install instructions to setup a new Mac.
 
@@ -40,7 +53,7 @@ Your Mac is now ready to use!
 
 > Note: you can use a different location than `~/.dotfiles` if you want. Just make sure you also update the reference in the [`.zshrc`](./.zshrc) file.
 
-## Your Own Dotfiles
+## Your Own Dotfiles :repeat:
 
 If you want to start with your own dotfiles from this setup, it's pretty easy to do so. First of all you'll need to fork this repo. After that you can tweak it the way you want.
 
@@ -61,8 +74,51 @@ You can tweak the shell theme, the Oh My Zsh settings and much more. Go through 
 
 Enjoy your own Dotfiles!
 
-## Thanks To...
+## Confidential dotfiles :new:
 
-I first got the idea for starting this project by visiting the [Github does dotfiles](https://dotfiles.github.io/) project. Both [Zach Holman](https://github.com/holman/dotfiles) and [Mathias Bynens](https://github.com/mathiasbynens/dotfiles) were great sources of inspiration. [Sourabh Bajaj](https://twitter.com/sb2nov/)'s [Mac OS X Setup Guide](http://sourabhbajaj.com/mac-setup/) proved to be invaluable. Thanks to [Taylor Otwell](https://twitter.com/taylorotwell) for his awesome Zsh theme! And lastly, I'd like to thank [Maxime Fabre](https://twitter.com/anahkiasen) for [his excellent presentation on Homebrew](https://speakerdeck.com/anahkiasen/a-storm-homebrewin) which made me migrate a lot to a [`Brewfile`](./Brewfile) and [Mackup](https://github.com/lra/mackup).
+Some information cannot be published to all eyes. I found an easy way to solve it with git submodules. It is straightforward, you need to configure a submodule link to a private repo of your choice(
+<a href="gitlab.com"><img alt="gitlab.com" src="https://about.gitlab.com/ico/favicon.ico"  height="16" width="16"></a>,
+<a href="bitbucket.org"><img alt="bitbucket.org" src="https://bitbucket.org/favicon.ico"  height="16" width="16"></a>,
+<a href="github.com"><img alt="github.com" src="https://assets-cdn.github.com/favicon.ico"  height="16" width="16"></a>
+). You can then put all individual files and then connect with the related resources.
 
-In general, I'd like to thank every single one who open-sources their dotfiles for their effort to contribute something to the open-source community. Your work means the world! :earth_africa: :heart:
+First, we need to tie it together.
+```bash
+# if already configured
+git clone --recurse-submodules git@github.com:voiski/dotfiles.git ~/.dotfile
+
+# if you wanna configured it first time
+git clone git@github.com:voiski/dotfiles.git ~/.dotfile
+cd ~/.dotfile
+git submodule add git@gitlab.com:voiski/dotfilesconfidential.git dotfilesconfidential
+git commit -m 'Adding confidential module'
+git push
+```
+
+Now, start with git config adding some custom attributes inside your private repo. Then, you need to link it inside the [.gitconfig](.gitconfig):
+```bash
+[include]
+	path = ~/.dotfiles/dotfilesconfidential/.gitconfig
+
+# You can limit it to your work folder
+[includeIf "gitdir:~/private_work/"]
+	path = ~/.dotfiles/dotfilesconfidential/.gitconfig-user
+```
+
+The same for bash scripts. In this example we are tieing inside the [.zshrc](.zshrc):
+```bash
+if [[ -s "$HOME/.dotfiles/dotfilesconfidential/aliases.zsh" ]]; then
+  source $HOME/.dotfiles/dotfilesconfidential/aliases.zsh
+fi
+```
+
+## Thanks To... :new:
+
+I could keep the original text here that is better than mine, but it is personal. I will make it simple, so I may thanks first [driesvints/dotfiles](https://github.com/driesvints/dotfiles) again with the awesome simple config struct. I can let it without thanks my good friend @pviniciusfm that pushed me to this awesome dotfiles world.
+
+I also like to keep the references, so here we go:
+* [Github does dotfiles](https://dotfiles.github.io/)
+* Both [Zach Holman](https://github.com/holman/dotfiles) and [Mathias Bynens](https://github.com/mathiasbynens/dotfiles) were great sources of inspiration.
+* [Sourabh Bajaj](https://twitter.com/sb2nov/)'s [Mac OS X Setup Guide](http://sourabhbajaj.com/mac-setup/)
+* [Taylor Otwell](https://twitter.com/taylorotwell) for his awesome Zsh theme!
+* [Maxime Fabre](https://twitter.com/anahkiasen) for [his excellent presentation on Homebrew](https://speakerdeck.com/anahkiasen/a-storm-homebrewin).
