@@ -77,9 +77,9 @@ Enjoy your own Dotfiles!
 ## Confidential dotfiles :new:
 
 Some information cannot be published to all eyes. I found an easy way to solve it with git submodules. It is straightforward, you need to configure a submodule link to a private repo of your choice(
-<a href="gitlab.com"><img alt="gitlab.com" src="https://about.gitlab.com/ico/favicon.ico"  height="16" width="16"></a>,
-<a href="bitbucket.org"><img alt="bitbucket.org" src="https://bitbucket.org/favicon.ico"  height="16" width="16"></a>,
-<a href="github.com"><img alt="github.com" src="https://assets-cdn.github.com/favicon.ico"  height="16" width="16"></a>
+<a href="https://gitlab.com"><img alt="gitlab.com" src="https://about.gitlab.com/ico/favicon.ico"  height="16" width="16"></a>,
+<a href="https://bitbucket.org"><img alt="bitbucket.org" src="https://bitbucket.org/favicon.ico"  height="16" width="16"></a>,
+<a href="https://github.com"><img alt="github.com" src="https://assets-cdn.github.com/favicon.ico"  height="16" width="16"></a>
 ). You can then put all individual files and then connect with the related resources.
 
 First, we need to tie it together.
