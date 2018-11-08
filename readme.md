@@ -10,8 +10,8 @@ issues if I so, but it will be at least the better reference to recover my
 preferences in a new environment.
 
 A quick legend here since I'm keeping the original Dries' readme content:
-:repeat: Original Dries' sections
-:new: Mine contribution
+* :repeat: Original Dries' sections
+* :new: Mine contribution
 
 ## What Is This? :repeat:
 
