@@ -139,6 +139,9 @@
 	# Animated grapth of current grapth
 	gource="!gource -s 0.5 --hide dirnames,filenames --follow-user \"$(git config user.name)\" #"
 
+	# I like sourcetree, more then 'git gui'
+	source="!/Applications/SourceTree.app/Contents/Resources/stree ."
+
 [apply]
 
 	# Detect whitespace errors when applying a patch

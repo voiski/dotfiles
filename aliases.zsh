@@ -96,21 +96,25 @@ alias restart_mac_cam='sudo killall VDCAssistant'
 #################################
 # Miscellaneous
 #################################
-alias mkdir='mkdir -pv'
-alias wget='wget -c'
-alias histg='history | grep'
-alias webify='mogrify -resize 690\> *.png'
+alias asciicast2gif='time docker run --rm -v $PWD:/data asciinema/asciicast2gif'
 alias bash_aliases='exec zsh'
 alias dcomp='docker-compose'
-alias grep_inside='grep -rnw . -e'
 alias find_file='find . -name'
+alias grep_inside='grep -rnw . -e'
+alias histg='history | grep'
+alias mkdir='mkdir -pv'
 alias rm_dir='rm -Rf'
+alias webify='mogrify -resize 690\> *.png'
+alias wget='wget -c'
+
 function find_rm(){ # find and remove
   find_file $1 -print0|xargs -0 rm
 }
+
 function docker_bash(){ # up the container and enter in bash of it
   docker exec -it $1 bash
 }
+
 function docker_log(){ # internal logs
 	local pred='process matches ".*(ocker|vpnkit).*"
   || (process in {"taskgated-helper", "launchservicesd", "kernel"} && eventMessage contains[c] "docker")'
@@ -120,6 +124,7 @@ function docker_log(){ # internal logs
 function curl_json(){
   curl $*|python -m json.tool
 }
+
 function java_switch () { # Swith java version java_switch -v 1.7
   VERSION=$2
   [ -z "$VERSION" ] && VERSION=$1
@@ -203,9 +208,10 @@ alias c_wifi_stats='cat /proc/net/wireless'
 #################################
 # Open
 #################################
-alias o_file_aliases='r_text ~/.dotfile'
+alias o_file_aliases='r_text ~/.dotfiles'
 alias o_file_hosts='r_text /etc/hosts'
 alias o_file_ssh='r_text ~/.ssh/config'
+alias o_file_kube='r_text ~/.kube/config'
 alias o_file_aws='r_text ~/.aws/credentials ~/.aws/config'
 
 
