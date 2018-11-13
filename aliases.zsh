@@ -186,8 +186,6 @@ function g.t.d(){ # git delete tag and push this tag
   git tag -d $1;git push origin :refs/tags/$1
 }
 
-alias stree="/Applications/SourceTree.app/Contents/Resources/stree"
-
 #################################
 #Run some script
 #################################
