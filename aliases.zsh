@@ -88,7 +88,7 @@ function kill_grep(){ # kill using greep return
   ID_PROCESS=$(ps_grep $1|awk '{print $2}')
   kill -9 $ID_PROCESS
 }
-# function restart_linux_cam(){ sudo rmmod -v uvcvideo && sudo modprobe -v uvcvideo; }
+function restart_linux_cam(){ sudo rmmod -v uvcvideo && sudo modprobe -v uvcvideo; }
 alias restart_mac_cam='sudo killall VDCAssistant'
 
 
@@ -153,6 +153,16 @@ function kubectl_token() { # kubectl user credentials with OIDC
   admin> user ${admin_user:-admin}: ${admin_password:-'n/a'}
   OIDC> user ${user_id}: ${user_token}
   "
+}
+
+function docker_rmi(){ # iterative docker image deletion
+	for image in $(docker images --format "{{.ID}}-{{.Repository}}:{{.Tag}}")
+	do printf "Delete ${image}?[y]" \
+		&& read -r response \
+		&& [ "${response}" = 'y' ] \
+		&& docker rmi ${image#*-} \
+		|| true
+	done
 }
 
 function cheat(){ # cheat https://github.com/chubin/cheat.sh
