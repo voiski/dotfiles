@@ -107,6 +107,15 @@ alias rm_dir='rm -Rf'
 alias webify='mogrify -resize 690\> *.png'
 alias wget='wget -c'
 
+function bash-record(){
+	[ -z "$1" ] && echo "Usage: $0 <name>" && return 1
+	asciinema rec "/tmp/$1.cast" -y --overwrite
+	time docker run --rm -v /tmp:/tmp -v $PWD:/data asciinema/asciicast2gif \
+		-s 10 \
+		-S 1 \
+		"/tmp/$1.cast" "./$1.gif"
+}
+
 function find_rm(){ # find and remove
   find_file $1 -print0|xargs -0 rm
 }
