@@ -17,6 +17,10 @@ brew bundle
 # Make ZSH the default shell environment
 chsh -s $(which zsh)
 
+# Extra completions
+curl -fLo ~/.zprezto/modules/completion/external/src/_docker https://raw.githubusercontent.com/docker/cli/master/contrib/completion/zsh/_docker
+compinit
+
 # Install global NPM packages
 npm install --global yarn
 
