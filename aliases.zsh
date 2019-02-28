@@ -116,6 +116,14 @@ function bash-record(){
 		"/tmp/$1.cast" "./$1.gif"
 }
 
+function bash-record-svg(){
+	[ -z "$1" ] && echo "Usage: $0 <name>" && return 1
+	asciinema rec "/tmp/$1.cast" -y --overwrite
+	time docker run --rm -v /tmp:/tmp -v $PWD:/data voiski/svg-term-cli \
+		--in "/tmp/$1.cast" --out "/data/$1.svg"
+		# Missing speed
+}
+
 function find_rm(){ # find and remove
   find_file $1 -print0|xargs -0 rm
 }
