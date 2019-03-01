@@ -107,18 +107,31 @@ alias rm_dir='rm -Rf'
 alias webify='mogrify -resize 690\> *.png'
 alias wget='wget -c'
 
-function bash-record(){
+function bash-record-asciinema(){ # bash-record-asciinema cast_name no_override:optional
 	[ -z "$1" ] && echo "Usage: $0 <name>" && return 1
-	asciinema rec "/tmp/$1.cast" -y --overwrite
-	time docker run --rm -v /tmp:/tmp -v $PWD:/data asciinema/asciicast2gif \
-		-s 10 \
-		-S 1 \
-		"/tmp/$1.cast" "./$1.gif"
+	local cast_file="$1"
+	if [ -f $cast_file ] && [ "$2" != "" ];then
+		echo "File ${cast_file} already exist!"
+		return 215
+	fi
+	asciinema rec $cast_file -y --overwrite
+	grep "." $cast_file| tail -2 | grep exit | grep 1001 &> /dev/null && return 1001 || true
 }
 
-function bash-record-svg(){
+function bash-record(){ # bash-record git_name speed:optional cast_file:optional
 	[ -z "$1" ] && echo "Usage: $0 <name>" && return 1
-	asciinema rec "/tmp/$1.cast" -y --overwrite
+	local cast_file=${3:-/tmp/$1.cast}
+	(bash-record-asciinema $cast_file ${3} || [ $? = 215 ]) || return 1
+	time docker run --rm -v /tmp:/tmp -v $PWD:/data asciinema/asciicast2gif \
+		-s ${2:-10} \
+		-S 1 \
+		$cast_file "./$1.gif"
+}
+
+function bash-record-svg(){ # bash-record svg_name speed:optional cast_file:optional
+	[ -z "$1" ] && echo "Usage: $0 <name>" && return 1
+	local cast_file=${3:-/tmp/$1.cast}
+	(bash-record-asciinema $cast_file ${3} || [ $? = 215 ]) || return 1
 	time docker run --rm -v /tmp:/tmp -v $PWD:/data voiski/svg-term-cli \
 		--in "/tmp/$1.cast" --out "/data/$1.svg"
 		# Missing speed
