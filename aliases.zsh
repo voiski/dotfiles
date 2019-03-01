@@ -151,6 +151,24 @@ function docker_log(){ # internal logs
 	/usr/bin/log stream --style syslog --level=debug --color=always --predicate "$pred"
 }
 
+function docker_rmi(){ # iterative docker image deletion
+	local before=$(docker system df|grep 'Images' | awk '{print $4}')
+	for image in $(docker images --format "[{{.ID}}]{{.Repository}}:{{.Tag}}")
+	do printf "Delete ${image}?[y]" \
+		&& read -r response \
+		&& [ "${response}" = 'y' ] \
+		&& docker rmi ${image#*-} \
+		|| true
+	done
+	local after=$(docker system df|grep 'Images' | awk '{print $4}')
+	local saved=$((${before%GB}-${after%GB}))
+	echo "
+	Saved size: $(printf "%.3f" "$saved")GB
+	Before: ${before}
+	After: ${after}
+	"
+}
+
 function curl_json(){
   curl $*|python -m json.tool
 }
@@ -174,16 +192,6 @@ function kubectl_token() { # kubectl user credentials with OIDC
   admin> user ${admin_user:-admin}: ${admin_password:-'n/a'}
   OIDC> user ${user_id}: ${user_token}
   "
-}
-
-function docker_rmi(){ # iterative docker image deletion
-	for image in $(docker images --format "{{.ID}}-{{.Repository}}:{{.Tag}}")
-	do printf "Delete ${image}?[y]" \
-		&& read -r response \
-		&& [ "${response}" = 'y' ] \
-		&& docker rmi ${image#*-} \
-		|| true
-	done
 }
 
 function cheat(){ # cheat https://github.com/chubin/cheat.sh
