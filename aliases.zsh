@@ -157,7 +157,7 @@ function docker_rmi(){ # iterative docker image deletion
 	do printf "Delete ${image}?[y]" \
 		&& read -r response \
 		&& [ "${response}" = 'y' ] \
-		&& docker rmi ${image#*-} \
+		&& docker rmi ${image#*]} \
 		|| true
 	done
 	local after=$(docker system df|grep 'Images' | awk '{print $4}')
