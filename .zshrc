@@ -17,4 +17,19 @@ if [[ -s "$HOME/.dotfiles/dotfilesconfidential/aliases.zsh" ]]; then
 fi
 
 export GOPATH=$(go env GOPATH)
+export GO111MODULE=on
+export EDITOR=vi
+
 eval "$(rbenv init -)"
+export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+
+# Terraform version
+load-tfswitch() {
+  local tfswitchrc_path=".tfswitchrc"
+
+  if [ -f "$tfswitchrc_path" ]; then
+    tfswitch
+  fi
+}
+add-zsh-hook chpwd load-tfswitch
+load-tfswitch
