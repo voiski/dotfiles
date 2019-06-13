@@ -106,6 +106,7 @@ alias mkdir='mkdir -pv'
 alias rm_dir='rm -Rf'
 alias webify='mogrify -resize 690\> *.png'
 alias wget='wget -c'
+alias brewv="curl -s https://gist.githubusercontent.com/voiski/973ec1fe0e4b05d52133c9d0438eb2de/raw//brewv.sh|bash -s"
 
 function bash-record-asciinema(){ # bash-record-asciinema cast_name no_override:optional
 	[ -z "$1" ] && echo "Usage: $0 <name>" && return 1
@@ -143,6 +144,10 @@ function find_rm(){ # find and remove
 
 function docker_bash(){ # up the container and enter in bash of it
   docker exec -it $1 bash
+}
+
+function docker_run(){ # docker_run [yourimage] <optional:bash> # start a container with given image
+	docker run --rm -it -v $(pwd):/app -w /app $*
 }
 
 function docker_log(){ # internal logs
@@ -193,6 +198,8 @@ function kubectl_token() { # kubectl user credentials with OIDC
   OIDC> user ${user_id}: ${user_token}
   "
 }
+
+alias k="kubectl"
 
 function cheat(){ # cheat https://github.com/chubin/cheat.sh
 	local x=${@:2}
@@ -256,6 +263,7 @@ alias c_wifi_stats='cat /proc/net/wireless'
 #################################
 alias o_file_aliases='r_text ~/.dotfiles'
 alias o_file_hosts='r_text /etc/hosts'
+alias o_file_resolver='r_text /etc/resolv.conf'
 alias o_file_ssh='r_text ~/.ssh/config'
 alias o_file_kube='r_text ~/.kube/config'
 alias o_file_aws='r_text ~/.aws/credentials ~/.aws/config'
