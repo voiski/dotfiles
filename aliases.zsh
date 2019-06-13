@@ -118,21 +118,21 @@ function bash-record-asciinema(){ # bash-record-asciinema cast_name no_override:
 	grep "." $cast_file| tail -2 | grep exit | grep 1001 &> /dev/null && return 1001 || true
 }
 
-function bash-record(){ # bash-record git_name speed:optional cast_file:optional
+function bash-record(){ # bash-record final_gif_name speed:optional cast_file:optional
 	[ -z "$1" ] && echo "Usage: $0 <name>" && return 1
 	local cast_file=${3:-/tmp/$1.cast}
 	(bash-record-asciinema $cast_file ${3} || [ $? = 215 ]) || return 1
-	time docker run --rm -v /tmp:/tmp -v $PWD:/data asciinema/asciicast2gif \
+	time docker run --rm -v $(dirname $cast_file):/tmp -v $PWD:/data asciinema/asciicast2gif \
 		-s ${2:-10} \
 		-S 1 \
 		$cast_file "./$1.gif"
 }
 
-function bash-record-svg(){ # bash-record svg_name speed:optional cast_file:optional
+function bash-record-svg(){ # bash-record final_gif_name speed:optional cast_file:optional
 	[ -z "$1" ] && echo "Usage: $0 <name>" && return 1
 	local cast_file=${3:-/tmp/$1.cast}
 	(bash-record-asciinema $cast_file ${3} || [ $? = 215 ]) || return 1
-	time docker run --rm -v /tmp:/tmp -v $PWD:/data voiski/svg-term-cli \
+	time docker run --rm -v $(dirname $cast_file):/tmp -v $PWD:/data voiski/svg-term-cli \
 		--in "/tmp/$1.cast" --out "/data/$1.svg"
 		# Missing speed
 }
