@@ -57,21 +57,6 @@ function extract {
 	  done
 	fi
 }
-function optize {
-  if [[ -z "$1" || -z "$2" || -z "$3" || ! ( -e "$1" && -e "$3" ) ]]; then
-    # display usage if no parameters given
-    echo "Usage: optize <path/folder_name> <desired_name> <bin_path>"
-    echo "       extract <path/file_name_1.ext> [path/file_name_2.ext] [path/file_name_3.ext]"
-    return 1
-  else
-	  FOLDER_NAME=${1%%/*}
-	  INTERNAL_BIN_PATH=${3##${FOLDER_NAME}/}
-	  BIN_FILE=${3##*/}
-	  sudo mv $1 /opt/$1
-	 	sudo ln -s /opt/$1 /usr/local/lib/$2
-	 	sudo ln -s /usr/local/lib/$2/$INTERNAL_BIN_PATH /usr/local/bin/$BIN_FILE
-	fi
-}
 
 
 
@@ -106,7 +91,9 @@ alias mkdir='mkdir -pv'
 alias rm_dir='rm -Rf'
 alias webify='mogrify -resize 690\> *.png'
 alias wget='wget -c'
-alias brewv="curl -s https://gist.githubusercontent.com/voiski/973ec1fe0e4b05d52133c9d0438eb2de/raw//brewv.sh|bash -s"
+alias brewv="curl -s https://gist.githubusercontent.com/voiski/973ec1fe0e4b05d52133c9d0438eb2de/raw//brewv.sh | bash -s"
+alias brew-grapth="curl -s https://raw.githubusercontent.com/martido/brew-graph/master/brew-graph.rb | ruby - --installed"
+alias brew-grapth-png="brew-grapth | dot -Tpng -o/tmp/brew-graph.png && open /tmp/brew-graph.png"
 
 function bash-record-asciinema(){ # bash-record-asciinema cast_name no_override:optional
 	[ -z "$1" ] && echo "Usage: $0 <name>" && return 1
@@ -117,6 +104,12 @@ function bash-record-asciinema(){ # bash-record-asciinema cast_name no_override:
 	fi
 	asciinema rec $cast_file -y --overwrite
 	grep "." $cast_file| tail -2 | grep exit | grep 1001 &> /dev/null && return 1001 || true
+}
+
+function bash-play(){ # bash-play cast_name
+	[ -z "$1" ] && echo "Usage: $0 <name>" && return 1
+	local cast_file="$1"
+	asciinema play --idle-time-limit=1 --speed=${2:-5} $cast_file
 }
 
 function bash-record(){ # bash-record final_gif_name speed:optional cast_file:optional
@@ -242,14 +235,14 @@ function g.t.d(){ # git delete tag and push this tag
 }
 
 #################################
-#Run some script
+# Run some script
 #################################
 alias r_text='subl'
 
 
 
 #################################
-#Connect
+# Connect
 #################################
 alias myip='curl http://ipecho.net/plain; echo'
 alias vpn='/opt/cisco/anyconnect/bin/vpn'
@@ -279,7 +272,7 @@ alias w_function='cat $HOME/.dotfiles/aliases.zsh | grep function'
 
 
 #################################
-#python
+# python
 #################################
 
 alias p.env='p.env2'
@@ -287,3 +280,13 @@ alias p.env.activate='source ./.env/bin/activate'
 alias p.env.deactivate='deactivate'
 alias p.env2='virtualenv -p /usr/local/bin/python2 .env'
 alias p.env3='virtualenv -p /usr/local/bin/python3 .env'
+
+#################################
+# file mapping
+#################################
+alias -s {yml,yaml}=code
+
+
+
+# https://opensource.com/article/18/9/tips-productivity-zsh
+# alias -g G='| grep -i'

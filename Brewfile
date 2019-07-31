@@ -7,7 +7,6 @@ tap 'homebrew/bundle'
 
 # Install Binaries
 brew 'asciinema'
-brew 'asciinema2gif'
 brew 'awscli'
 brew 'bash' # Bash 4
 brew 'circleci'
@@ -17,6 +16,7 @@ brew 'dep'
 brew 'gettext'
 brew 'git'
 brew 'gitlab-runner'
+brew 'graphviz'
 brew 'grep'
 brew 'hub'
 brew 'jfrog-cli-go'
@@ -71,6 +71,7 @@ cask 'intellij-idea-ce'
 cask 'java'
 cask 'microsoft-remote-desktop-beta'
 cask 'minikube'
+cask 'phantomjs'
 cask 'rescuetime'
 # cask 'shuttle' # Maybe in the future
 cask 'slack'
