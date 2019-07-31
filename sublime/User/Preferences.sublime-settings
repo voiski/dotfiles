@@ -1,4 +1,5 @@
 {
+  "gpu_window_buffer": false,
 	"Ignored_packages":
 	[
 		"Vintage"
