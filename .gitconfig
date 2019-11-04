@@ -81,7 +81,8 @@
   gitdiff="!open https://$(git repo-server)/$(git repo-user)/$(git repo-name)/compare/$(git branch-current) #" 
 
   # Open github for the current branch
-  github="!open https://$(git repo-server)/$(git repo-user)/$(git repo-name)/tree/$(git branch-current) #" 
+  github = gh
+  gh = "!open https://$(git repo-server)/$(git repo-user)/$(git repo-name)/tree/$(git branch-current) #" 
 
   # Switch to a branch, creating it if necessary
   go = "!f() { git checkout -b \"$1\" 2> /dev/null || git checkout \"$1\"; }; f" 
@@ -120,7 +121,12 @@
   p = !"git pull; git submodule foreach git pull origin master" 
 
   # Open pr entry for the current branch
-  pr="!open https://$(git repo-server)/$(git repo-user)/$(git repo-name)/compare/$(git branch-current)?expand=1 #" 
+  pr="!f(){\
+    if [[ $(git repo-server) =~ gitlab ]]; \
+    then open https://$(git repo-server)/$(git repo-user)/$(git repo-name)/compare/master...$(git branch-current);\
+    else open https://$(git repo-server)/$(git repo-user)/$(git repo-name)/compare/$(git branch-current)?expand=1;\
+    fi \
+  }; f" 
 
   # Interactive rebase with the given number of latest commits
   reb = "!r() { git rebase -i HEAD~$1; }; r" 
