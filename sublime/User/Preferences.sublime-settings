@@ -1,5 +1,4 @@
 {
-  "gpu_window_buffer": false,
 	"Ignored_packages":
 	[
 		"Vintage"
@@ -20,7 +19,8 @@
 	"color_scheme": "Packages/Oceanic Next Color Scheme/Oceanic Next.tmTheme",
 	"detect_indentation": false,
 	"ensure_newline_at_eof_on_save": true,
-	"font_size": 10,
+	"font_size": 14,
+	"gpu_window_buffer": false,
 	"ignored_packages":
 	[
 		"Vintage"
