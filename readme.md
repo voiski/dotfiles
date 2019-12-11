@@ -116,7 +116,7 @@ fi
 
 ## Thanks To... :new:
 
-I could keep the original text here that is better than mine, but it is personal. I will make it simple, so I may thanks first [driesvints/dotfiles](https://github.com/driesvints/dotfiles) again with the awesome simple config struct. I can let it without thanks my good friend [Paulo Machado](https://github.com/pviniciusfm) that pushed me to this awesome dotfiles world.
+I could keep the original text here that is better than mine, but it is personal. I will make it simple, so I may thanks first [driesvints/dotfiles](https://github.com/driesvints/dotfiles) again with the awesome simple config struct. I can't let it without thanks my good friend [Paulo Machado](https://github.com/pviniciusfm) that pushed me to this awesome dotfiles world.
 
 I also like to keep the references, so here we go:
 * [Github does dotfiles](https://dotfiles.github.io/)
