@@ -75,6 +75,7 @@ function kill_grep(){ # kill using greep return
 }
 function restart_linux_cam(){ sudo rmmod -v uvcvideo && sudo modprobe -v uvcvideo; }
 alias restart_mac_cam='sudo killall VDCAssistant'
+alias zreset='source ~/.zshrc'
 
 
 
@@ -286,7 +287,105 @@ alias p.env3='virtualenv -p /usr/local/bin/python3 .env'
 #################################
 alias -s {yml,yaml}=code
 
+#################################
+# pomodoro
+#################################
+function pomo(){
+	local action=$1
+	local today_pomo=$(_pomo_file ${2})
+	local monthly_interruptions=~/.pomo/interruptions_`date +%Y%m_%B`.yml
 
+	function _pomo_file(){
+		local t=${1:-$(date +%Y%m%d)}
+		echo ~/.pomo/pomo_${t}.yml
+	}
 
+	function _pomo_start_round(){
+		local round=${1:-1}
+		if ! [ -f ${today_pomo} ];then
+			echo "date: $(date +%A\ %b.\ %e,\ %Y)" > ${today_pomo}
+			echo "sessions:" >> ${today_pomo}
+		fi
+		echo "Starting new round ${round}"
+		echo "- round `date +%H:%M`:" >> ${today_pomo}
+		_pomo_start_15 ${today_pomo}
+		_pomo_start_15 ${today_pomo}
+		_pomo_start_15 ${today_pomo}
+		_pomo_start_15 ${today_pomo} true
+		# 8h of work, 4 rounds is more then enough
+		if [ ${round} -gt 4 ];then
+			echo "Last round, stopping =)"
+			_pomo_sound Sosumi
+			_pomo_sound
+			return 0
+		fi
+		(( round+=1 ))
+		_pomo_start_round ${round}
+	}
+
+	function _pomo_start_15(){
+		local today_pomo=$1
+		local long_break=$2
+		local start=`date +%H:%M:%S`
+		echo "New pomo starting ${start} - 25 minutes duration - $(_pomo_est 25)"
+		echo "  - start: ${start}" >> ${today_pomo}
+		sleep 1500
+		echo "    done: `date +%H:%M:%S`" >> ${today_pomo}
+		# break
+		_pomo_sound
+		local break_time=300
+		local default_break_desc="short break of 5m - $(_pomo_est 5)"
+		if [ "${long_break}" = "true" ];then
+			break_time=900
+			default_break_desc="LONG break of 15m - $(_pomo_est 15)"
+		fi
+		echo "Pomo done, take a ${break_desc}"
+		sleep ${break_time}
+	}
+
+	function _pomo_est(){
+		echo "est `date -v+${1}M +'%H:%M'`"
+	}
+
+	function _pomo_sound(){
+		local sound=${1:-Glass}
+		! [ -f /System/Library/Sounds/${sound}.aiff ] || afplay /System/Library/Sounds/${sound}.aiff
+	}
+	
+	case "${action}" in
+		interruption|i)
+			echo "- `date`" >>! ${monthly_interruptions}
+			if [ -f ${today_pomo} ] && ! tail -1 ${today_pomo} | grep interruption &>/dev/null; then
+				echo "    interruption: `date +%H:%M:%S`" >> ${today_pomo}
+			fi
+			;;
+		interruptions) [ -f ${monthly_interruptions} ] && yq r -C ${monthly_interruptions} || echo "No interruption this month!";;
+		list|ls|l) ls -1 ~/.pomo/pomo_* | xargs -L 1 basename | cut -b 6-13 | xargs -I {} echo "pomo p {}";;
+		start|s) echo "type fg and ctrl+c to STOP!" && _pomo_start_round &;;
+		description|d)
+			today_pomo=$(_pomo_file)
+			shift
+			local description="${@}"
+			if [ -f ${today_pomo} ] && ! tail -1 ${today_pomo} | grep description &>/dev/null; then
+				echo "    description: ${description}" >> ${today_pomo}
+			fi
+			;;
+		print|p|) [ -f ${today_pomo} ] && yq r -C ${today_pomo} || echo "No pomo yet!";;
+		*)
+			echo 'pomo [action] [arg]
+Ex:
+	pomo i # registry interruptions in current round and in monthly register
+	pomo interruptions # print monthly interruptions
+	pomo s # start new pomodoro session stopping automatically at the 4th round
+	pomo d my task # add description to the running round
+	pomo l # list existing pomo sessions already giving the command for more details
+	pomo # prints the current pomo session
+	pomo p 20200326 # prints the given pomo session - date id
+'
+			;;
+	esac
+}
+
+#################################
 # https://opensource.com/article/18/9/tips-productivity-zsh
 # alias -g G='| grep -i'
