@@ -56,3 +56,8 @@ ln -s $HOME/.dotfiles/${istio_base_path}/bin/istioctl /usr/local/bin/istioctl
 # Set macOS preferences
 # We will run this last because this will reload the shell
 source .macos
+
+# link confidential
+if [[ -s "dotfilesconfidential/install.sh" ]]; then
+  exec dotfilesconfidential/install.sh
+fi
