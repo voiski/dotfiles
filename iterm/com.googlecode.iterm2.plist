@@ -4,6 +4,8 @@
 <dict>
 	<key>AppleAntiAliasingThreshold</key>
 	<integer>1</integer>
+	<key>ApplePressAndHoldEnabled</key>
+	<false/>
 	<key>AppleScrollAnimationEnabled</key>
 	<integer>0</integer>
 	<key>AppleSmoothFixedFontsSizeThreshold</key>
@@ -281,17 +283,17 @@
 	<key>NSWindow Frame NSFontPanel</key>
 	<string>3037 190 445 77 1920 -960 3840 2137 </string>
 	<key>NSWindow Frame SUStatusFrame</key>
-	<string>3640 546 400 129 1920 -960 3840 2137 </string>
+	<string>3121 716 400 129 1920 -960 3840 2137 </string>
 	<key>NSWindow Frame SUUpdateAlert</key>
-	<string>667 588 620 392 0 0 1920 1177 </string>
+	<string>3530 348 620 392 1920 -960 3840 2137 </string>
 	<key>NSWindow Frame SharedPreferences</key>
 	<string>2230 -446 796 486 1920 -960 3840 2137 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>973 187 890 602 0 0 1920 1177 </string>
+	<string>4023 -960 1737 2137 1920 -960 3840 2137 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
-	<string>3810 -960 1950 2137 1920 -960 3840 2137 </string>
+	<string>2636 -73 890 638 1920 -960 3840 2137 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
-	<string>2857 99 905 602 1920 -960 3840 2137 </string>
+	<string>2857 53 890 638 1920 -960 3840 2137 </string>
 	<key>New Bookmarks</key>
 	<array>
 		<dict>
@@ -1104,8 +1106,10 @@
 	</array>
 	<key>NoSyncAllAppVersions</key>
 	<array>
-		<string>3.2.9</string>
 		<string>3.3.2</string>
+		<string>3.2.9</string>
+		<string>3.3.8</string>
+		<string>3.3.3</string>
 	</array>
 	<key>NoSyncFrame_SharedPreferences</key>
 	<dict>
@@ -1121,9 +1125,9 @@
 	<key>NoSyncInstallationId</key>
 	<string>ED5EE3DC-2A23-4A9B-AB45-27D45D8D88A4</string>
 	<key>NoSyncLastTipTime</key>
-	<real>563142192.033252</real>
+	<real>589491290.24408996</real>
 	<key>NoSyncLaunchExperienceControllerRunCount</key>
-	<integer>1</integer>
+	<integer>19</integer>
 	<key>NoSyncNeverRemindPrefsChangesLostForFile</key>
 	<true/>
 	<key>NoSyncNeverRemindPrefsChangesLostForFile_selection</key>
@@ -1482,6 +1486,22 @@
 			</dict>
 			<dict>
 				<key>isTerminal</key>
+				<true/>
+				<key>name</key>
+				<string>currentTab.currentSession.terminalWindowName</string>
+				<key>nonterminalContext</key>
+				<integer>0</integer>
+			</dict>
+			<dict>
+				<key>isTerminal</key>
+				<true/>
+				<key>name</key>
+				<string>currentTab.currentSession.terminalIconName</string>
+				<key>nonterminalContext</key>
+				<integer>0</integer>
+			</dict>
+			<dict>
+				<key>isTerminal</key>
 				<false/>
 				<key>name</key>
 				<string>currentTab</string>
@@ -1608,6 +1628,22 @@
 				<true/>
 				<key>name</key>
 				<string>currentSession.commandLine</string>
+				<key>nonterminalContext</key>
+				<integer>0</integer>
+			</dict>
+			<dict>
+				<key>isTerminal</key>
+				<false/>
+				<key>name</key>
+				<string>title</string>
+				<key>nonterminalContext</key>
+				<integer>1</integer>
+			</dict>
+			<dict>
+				<key>isTerminal</key>
+				<true/>
+				<key>name</key>
+				<string>title</string>
 				<key>nonterminalContext</key>
 				<integer>0</integer>
 			</dict>
@@ -1885,6 +1921,13 @@
 		<string>0069</string>
 		<string>0070</string>
 		<string>0071</string>
+		<string>0072</string>
+		<string>0073</string>
+		<string>0074</string>
+		<string>0075</string>
+		<string>0076</string>
+		<string>0077</string>
+		<string>0078</string>
 	</array>
 	<key>PointerActions</key>
 	<dict>
@@ -1923,6 +1966,8 @@
 	<string>/Users/avoiski/.dotfiles/iterm</string>
 	<key>PromptOnQuit</key>
 	<false/>
+	<key>SUAutomaticallyUpdate</key>
+	<true/>
 	<key>SUEnableAutomaticChecks</key>
 	<true/>
 	<key>SUFeedAlternateAppNameKey</key>
@@ -1932,8 +1977,10 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2019-08-22T12:34:25Z</date>
+	<date>2020-02-19T19:59:32Z</date>
 	<key>SUSendProfileInfo</key>
+	<false/>
+	<key>SUUpdateRelaunchingMarker</key>
 	<false/>
 	<key>ShowFullScreenTabBar</key>
 	<false/>
@@ -1948,6 +1995,6 @@
 	<key>findMode_iTerm</key>
 	<integer>0</integer>
 	<key>iTerm Version</key>
-	<string>3.3.2</string>
+	<string>3.3.8</string>
 </dict>
 </plist>
