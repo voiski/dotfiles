@@ -5,23 +5,25 @@
 #   Sorin Ionescu <sorin.ionescu@gmail.com>
 #
 
+# Session Envs
+export GOPATH=$(go env GOPATH)
+export GO111MODULE=on
+export EDITOR=vi
+
 # Source Prezto.
 if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
 
 # Customize to your needs...
+source $HOME/.dotfiles/path.zsh
 source $HOME/.dotfiles/aliases.zsh
 if [[ -s "$HOME/.dotfiles/dotfilesconfidential/aliases.zsh" ]]; then
   source $HOME/.dotfiles/dotfilesconfidential/aliases.zsh # no public backup
 fi
 
-export GOPATH=$(go env GOPATH)
-export GO111MODULE=on
-export EDITOR=vi
-
+# load rbenv
 eval "$(rbenv init -)"
-export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 
 # Terraform version
 load-tfswitch() {

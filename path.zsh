@@ -1,6 +1,9 @@
 # Load Node global installed binaries
 export PATH="$HOME/.node/bin:$PATH"
 
+# Node yarn modules
+export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+
 # Use project specific binaries before global ones
 export PATH="node_modules/.bin:vendor/bin:$PATH"
 
@@ -15,3 +18,6 @@ export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
 # Load custom commands
 # Disabled this because I have no custom binaries at the moment.
 export PATH="$DOTFILES/bin:$PATH"
+
+# Load golang global installed binaries
+export PATH="$HOME/go/bin:$PATH"
