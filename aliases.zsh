@@ -277,10 +277,10 @@ alias w_function='cat $HOME/.dotfiles/aliases.zsh | grep function'
 #################################
 
 alias p.env='p.env2'
-alias p.env.activate='source ./.env/bin/activate'
+alias p.env.activate='source ./.penv/bin/activate'
 alias p.env.deactivate='deactivate'
-alias p.env2='virtualenv -p /usr/local/bin/python2 .env'
-alias p.env3='virtualenv -p /usr/local/bin/python3 .env'
+alias p.env2='virtualenv -p /usr/local/bin/python2 .penv'
+alias p.env3='virtualenv -p /usr/local/bin/python3 .penv'
 
 #################################
 # file mapping
