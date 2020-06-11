@@ -291,10 +291,6 @@ alias -s {yml,yaml}=code
 # pomodoro
 #################################
 function pomo(){
-	local action=$1
-	local today_pomo=$(_pomo_file ${2})
-	local monthly_interruptions=~/.pomo/interruptions_`date +%Y%m_%B`.yml
-
 	function _pomo_file(){
 		local t=${1:-$(date +%Y%m%d)}
 		echo ~/.pomo/pomo_${t}.yml
@@ -308,15 +304,13 @@ function pomo(){
 		fi
 		echo "Starting new round ${round}"
 		echo "- round `date +%H:%M`:" >> ${today_pomo}
-		_pomo_start_15 ${today_pomo}
-		_pomo_start_15 ${today_pomo}
-		_pomo_start_15 ${today_pomo}
-		_pomo_start_15 ${today_pomo} true
+		_pomo_start_15 short ${today_pomo}
+		_pomo_start_15 short ${today_pomo}
+		_pomo_start_15 short ${today_pomo}
+		_pomo_start_15 LONG ${today_pomo} 15
 		# 8h of work, 4 rounds is more then enough
 		if [ ${round} -gt 4 ];then
-			echo "Last round, stopping =)"
-			_pomo_sound Sosumi
-			_pomo_sound
+			_pomo_notification "Last round, stopping..." alert Sosumi
 			return 0
 		fi
 		(( round+=1 ))
@@ -324,35 +318,72 @@ function pomo(){
 	}
 
 	function _pomo_start_15(){
-		local today_pomo=$1
-		local long_break=$2
+		date::guard
+		local break_type=$1
+		local today_pomo=$2
+		local break_time=${3:-5}
 		local start=`date +%H:%M:%S`
-		echo "New pomo starting ${start} - 25 minutes duration - $(_pomo_est 25)"
+		
 		echo "  - start: ${start}" >> ${today_pomo}
-		sleep 1500
+		_pomo_session 25 work "New pomo starting ${start}"
 		echo "    done: `date +%H:%M:%S`" >> ${today_pomo}
-		# break
-		_pomo_sound
-		local break_time=300
-		local default_break_desc="short break of 5m - $(_pomo_est 5)"
-		if [ "${long_break}" = "true" ];then
-			break_time=900
-			default_break_desc="LONG break of 15m - $(_pomo_est 15)"
-		fi
-		echo "Pomo done, take a ${break_desc}"
-		sleep ${break_time}
+		
+		_pomo_session ${break_time} "break" "Pomo done, take a ${break_type} break" alert
 	}
 
 	function _pomo_est(){
 		echo "est `date -v+${1}M +'%H:%M'`"
 	}
 
-	function _pomo_sound(){
-		local sound=${1:-Glass}
-		! [ -f /System/Library/Sounds/${sound}.aiff ] || afplay /System/Library/Sounds/${sound}.aiff
+	function _pomo_session(){
+		local duration=$1
+		local duration_secs=$((duration*60))
+		local ctx=$2
+		local msg=$3
+		local act=${4}
+
+		local est=$(_pomo_est ${duration})
+		_pomo_notification "${msg} - ${duration} minutes duration - ${est}" ${act} Glass
+		
+		sleep $((duration_secs-25))
+		_pomo_notification "25 secs to finish ${ctx} - ${est}"
+		sleep 25
 	}
-	
+
+	function _pomo_notification(){
+		local msg=${1}
+		local act=${2}
+		local sound=${3:-Tink}
+		osascript -e "display notification \"${msg}\" with title \"Pomodoro\" sound name \"${sound}\""
+		if [ "${act}" = "alert" ]
+		then local r=$(osascript -e "display alert \"Pomodoro\" message \"${msg}\"")
+		fi
+	}
+
+	function date::guard() {
+		local current_date=$(date::string)
+		if [ "${current_date}" = "${start_date}" ]
+		then return
+		fi
+		local msg="It is now a new day[${current_date}], stopping ${start_date} pomo session..."
+		_pomo_notification ${msg} alert Sosumi &
+		echo ${msg}
+		echo 'Existing pomo, Start a new one if you like with "pomo s"'
+		exit 1
+	}
+
+	function date::string(){
+		date +%b.\ %e,\ %Y
+	}
+
+	local start_date=$(date::string)
+	local action=$1
+	local today_pomo=$(_pomo_file ${2})
+	local monthly_interruptions=~/.pomo/interruptions_`date +%Y%m_%B`.yml
 	case "${action}" in
+		edit|e)
+			eval "${VISUAL} ${today_pomo}"
+			;;
 		interruption|i)
 			echo "- `date`" >>! ${monthly_interruptions}
 			if [ -f ${today_pomo} ] && ! tail -1 ${today_pomo} | grep interruption &>/dev/null; then

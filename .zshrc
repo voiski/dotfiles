@@ -8,6 +8,7 @@
 # Session Envs
 export GOPATH=$(go env GOPATH)
 export GO111MODULE=on
+export VISUAL='subl -w'
 export EDITOR=vi
 
 # Source Prezto.
