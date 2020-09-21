@@ -282,6 +282,8 @@
 	<string>35 83 224 275 0 0 1920 1177 </string>
 	<key>NSWindow Frame NSFontPanel</key>
 	<string>3037 190 445 77 1920 -960 3840 2137 </string>
+	<key>NSWindow Frame SUAutomaticUpdateAlert</key>
+	<string>-2211 397 616 174 -3840 -1075 3840 2137 </string>
 	<key>NSWindow Frame SUStatusFrame</key>
 	<string>3121 716 400 129 1920 -960 3840 2137 </string>
 	<key>NSWindow Frame SUUpdateAlert</key>
@@ -289,11 +291,11 @@
 	<key>NSWindow Frame SharedPreferences</key>
 	<string>2230 -446 796 486 1920 -960 3840 2137 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>4023 -960 1737 2137 1920 -960 3840 2137 </string>
+	<string>-1675 -1075 1675 2137 -3840 -1075 3840 2137 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
-	<string>2636 -73 890 638 1920 -960 3840 2137 </string>
+	<string>0 0 1680 1027 0 0 1920 1177 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
-	<string>2857 53 890 638 1920 -960 3840 2137 </string>
+	<string>0 389 905 638 0 0 1680 1027 </string>
 	<key>New Bookmarks</key>
 	<array>
 		<dict>
@@ -1109,6 +1111,7 @@
 		<string>3.3.2</string>
 		<string>3.2.9</string>
 		<string>3.3.8</string>
+		<string>3.3.9</string>
 		<string>3.3.3</string>
 	</array>
 	<key>NoSyncFrame_SharedPreferences</key>
@@ -1127,7 +1130,7 @@
 	<key>NoSyncLastTipTime</key>
 	<real>589491290.24408996</real>
 	<key>NoSyncLaunchExperienceControllerRunCount</key>
-	<integer>19</integer>
+	<integer>31</integer>
 	<key>NoSyncNeverRemindPrefsChangesLostForFile</key>
 	<true/>
 	<key>NoSyncNeverRemindPrefsChangesLostForFile_selection</key>
@@ -1844,6 +1847,14 @@
 			</dict>
 		</array>
 	</dict>
+	<key>NoSyncSuppressDownloadConfirmation</key>
+	<true/>
+	<key>NoSyncSuppressDownloadConfirmation_selection</key>
+	<integer>0</integer>
+	<key>NoSyncSuppressRestartSessionConfirmationAlert</key>
+	<true/>
+	<key>NoSyncSuppressRestartSessionConfirmationAlert_selection</key>
+	<integer>0</integer>
 	<key>NoSyncTimeOfFirstLaunchOfVersionWithTip</key>
 	<real>551050671.09505999</real>
 	<key>NoSyncTipsToNotShow</key>
@@ -1929,6 +1940,8 @@
 		<string>0077</string>
 		<string>0078</string>
 	</array>
+	<key>PMPrintingExpandedStateForPrint2</key>
+	<false/>
 	<key>PointerActions</key>
 	<dict>
 		<key>Button,1,1,,</key>
@@ -1964,6 +1977,8 @@
 	</dict>
 	<key>PrefsCustomFolder</key>
 	<string>/Users/avoiski/.dotfiles/iterm</string>
+	<key>Print In Black And White</key>
+	<true/>
 	<key>PromptOnQuit</key>
 	<false/>
 	<key>SUAutomaticallyUpdate</key>
@@ -1977,7 +1992,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2020-02-19T19:59:32Z</date>
+	<date>2020-07-17T03:03:56Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>SUUpdateRelaunchingMarker</key>
@@ -1995,6 +2010,6 @@
 	<key>findMode_iTerm</key>
 	<integer>0</integer>
 	<key>iTerm Version</key>
-	<string>3.3.8</string>
+	<string>3.3.9</string>
 </dict>
 </plist>

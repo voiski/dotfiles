@@ -237,6 +237,11 @@
 	# Make `git push` push relevant annotated tags when pushing branches out.
 	followTags = true
 
+[pull]
+
+  # puth your changes after the remote state - it keeps a shinning branch timeline, trust me.
+	rebase = true
+
 # URL shorthands
 
 [url "git@github.com:"]
@@ -264,5 +269,6 @@
 	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
 	trustExitCode = true
 
+## check more here https://github.com/voiski/dotfilesconfidential
 [include]
 	path = ~/.dotfiles/dotfilesconfidential/.gitconfig

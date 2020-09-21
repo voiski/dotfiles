@@ -194,6 +194,17 @@ function kubectl_token() { # kubectl user credentials with OIDC
   "
 }
 
+function awstags(){ # get tags from ip
+	[ -z "$1" ] && echo "Usage: $0 <ip>" && return 1
+	local ip=$1
+	local profile=""
+	[ -z "$2" ] || profile="--profile $2"
+	aws ec2 ${profile}\
+		--region us-east-1 describe-instances \
+		--filters Name=private-ip-address,Values=${ip} \
+		| jq -r ".Reservations[0].Instances[0].Tags"
+}
+
 alias k="kubectl"
 
 function cheat(){ # cheat https://github.com/chubin/cheat.sh
