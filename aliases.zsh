@@ -13,6 +13,7 @@ alias lt='ls -lhatFG'
 alias llt='ls -lhatF | less'
 alias c='clear'
 alias e='exit'
+alias bash='/usr/local/bin/bash'
 
 
 
