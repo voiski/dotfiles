@@ -122,6 +122,10 @@ function bash-record(){ # bash-record final_gif_name speed:optional cast_file:op
 		-s ${2:-10} \
 		-S 1 \
 		$cast_file "./$1.gif"
+	# https://www.robinstewart.com/blog/2018/10/adding-a-delay-to-the-end-of-an-animated-gif/
+	if command -v gifsicle &>/dev/null
+	then gifsicle -U $1.gif "#0--2" -d100 "#-1" -O2 > $1-optimised.gif
+	fi
 }
 
 function bash-record-svg(){ # bash-record final_gif_name speed:optional cast_file:optional
@@ -335,11 +339,11 @@ function pomo(){
 		local today_pomo=$2
 		local break_time=${3:-5}
 		local start=`date +%H:%M:%S`
-		
+
 		echo "  - start: ${start}" >> ${today_pomo}
 		_pomo_session 25 work "New pomo starting ${start}"
 		echo "    done: `date +%H:%M:%S`" >> ${today_pomo}
-		
+
 		_pomo_session ${break_time} "break" "Pomo done, take a ${break_type} break" alert
 	}
 
@@ -356,7 +360,7 @@ function pomo(){
 
 		local est=$(_pomo_est ${duration})
 		_pomo_notification "${msg} - ${duration} minutes duration - ${est}" ${act} Glass
-		
+
 		sleep $((duration_secs-25))
 		_pomo_notification "25 secs to finish ${ctx} - ${est}"
 		sleep 25
