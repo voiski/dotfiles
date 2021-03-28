@@ -85,17 +85,12 @@ alias zreset='source ~/.zshrc'
 #################################
 alias asciicast2gif='time docker run --rm -v $PWD:/data asciinema/asciicast2gif'
 alias bash_aliases='exec zsh'
-alias dcomp='docker-compose'
-alias find_file='find . -name'
 alias grep_inside='grep -rnw . -e'
-alias histg='history | grep'
 alias mkdir='mkdir -pv'
 alias rm_dir='rm -Rf'
 alias webify='mogrify -resize 690\> *.png'
 alias wget='wget -c'
 alias brewv="curl -s https://gist.githubusercontent.com/voiski/973ec1fe0e4b05d52133c9d0438eb2de/raw//brewv.sh | bash -s"
-alias brew-grapth="curl -s https://raw.githubusercontent.com/martido/brew-graph/master/brew-graph.rb | ruby - --installed"
-alias brew-grapth-png="brew-grapth | dot -Tpng -o/tmp/brew-graph.png && open /tmp/brew-graph.png"
 
 function bash-record-asciinema(){ # bash-record-asciinema cast_name no_override:optional
 	[ -z "$1" ] && echo "Usage: $0 <name>" && return 1
@@ -137,10 +132,6 @@ function bash-record-svg(){ # bash-record final_gif_name speed:optional cast_fil
 		# Missing speed
 }
 
-function find_rm(){ # find and remove
-  find_file $1 -print0|xargs -0 rm
-}
-
 function docker_bash(){ # up the container and enter in bash of it
   docker exec -it $1 bash
 }
@@ -156,7 +147,8 @@ function docker_log(){ # internal logs
 }
 
 function docker_rmi(){ # iterative docker image deletion
-	local before=$(docker system df|grep 'Images' | awk '{print $4}')
+  function docker_df:image(){ docker system df|grep 'Images' | awk '{print $4}' }
+	local before=$(docker_df:image)
 	for image in $(docker images --format "[{{.ID}}]{{.Repository}}:{{.Tag}}")
 	do printf "Delete ${image}?[y]" \
 		&& read -r response \
@@ -164,13 +156,32 @@ function docker_rmi(){ # iterative docker image deletion
 		&& docker rmi ${image#*]} \
 		|| true
 	done
-	local after=$(docker system df|grep 'Images' | awk '{print $4}')
+	local after=$(docker_df:image)
 	local saved=$((${before%GB}-${after%GB}))
 	echo "
 	Saved size: $(printf "%.3f" "$saved")GB
 	Before: ${before}
 	After: ${after}
 	"
+}
+
+function docker_rmv(){ # iterative docker volume deletion
+  function docker_df:volume(){ docker system df|grep 'Local Volumes' | awk '{print $5}' }
+  local before=$(docker_df:volume)
+  for volume in $(docker volume ls --format "{{.Name}}")
+  do printf "Delete ${volume}?[y]" \
+    && read -r response \
+    && [ "${response}" = 'y' ] \
+    && docker volume rm ${volume#*]} \
+    || true
+  done
+  local after=$(docker_df:volume)
+  local saved=$((${before%GB}-${after%GB}))
+  echo "
+  Saved size: $(printf "%.3f" "$saved")GB
+  Before: ${before}
+  After: ${after}
+  "
 }
 
 function curl_json(){

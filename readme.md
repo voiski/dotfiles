@@ -114,6 +114,17 @@ if [[ -s "$HOME/.dotfiles/dotfilesconfidential/aliases.zsh" ]]; then
 fi
 ```
 
+### GpG
+
+You can also define different gpg keys to sign your commits, so it will confirm your changes come from your computer.
+
+* Check for more details in the [Checking for existing GPG keys][gpg].
+* Use the same file from the `[include]` to add:
+  ```bash
+  [user]
+  signingkey = mygpg
+  ```
+
 ## Thanks To... :new:
 
 I could keep the original text here that is better than mine, but it is personal. I will make it simple, so I may thanks first [driesvints/dotfiles](https://github.com/driesvints/dotfiles) again with the awesome simple config struct. I can't let it without thanks my good friend [Paulo Machado](https://github.com/pviniciusfm) that pushed me to this awesome dotfiles world.
@@ -124,3 +135,6 @@ I also like to keep the references, so here we go:
 * [Sourabh Bajaj](https://twitter.com/sb2nov/)'s [Mac OS X Setup Guide](http://sourabhbajaj.com/mac-setup/)
 * [Taylor Otwell](https://twitter.com/taylorotwell) for his awesome Zsh theme!
 * [Maxime Fabre](https://twitter.com/anahkiasen) for [his excellent presentation on Homebrew](https://speakerdeck.com/anahkiasen/a-storm-homebrewin).
+
+
+[gpg]: https://docs.github.com/en/github/authenticating-to-github/checking-for-existing-gpg-keys

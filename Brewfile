@@ -11,7 +11,6 @@ brew 'bash' # Bash 4
 brew 'circleci'
 brew 'coreutils' # Those that come with macOS are outdated
 brew 'ctop'
-brew 'dep'
 brew 'gettext'
 brew 'gifsicle'
 brew 'git'
@@ -33,6 +32,7 @@ brew 'p7zip'
 brew 'packer'
 brew 'pngquant'
 brew 'speedtest'
+brew 'svn' # other brews depend on this one
 brew 'telnet'
 brew 'terragrunt'
 brew 'tmux'
