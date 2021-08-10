@@ -8,7 +8,6 @@ tap 'teamookla/speedtest'
 brew 'asciinema'
 brew 'awscli'
 brew 'bash' # Bash 4
-brew 'circleci'
 brew 'coreutils' # Those that come with macOS are outdated
 brew 'ctop'
 brew 'gettext'
@@ -56,17 +55,16 @@ brew 'rbenv'
 
 # Apps
 cask 'adobe-acrobat-reader'
-cask 'aerial'
-cask 'alfred'
-cask 'caffeine'
+# cask 'aerial' # awesome, but consume a lot of my HD
+# cask 'caffeine'
 cask 'chef/chef/chefdk'
 cask 'charles'
 cask 'clocker'
 cask 'docker'
 cask 'firefox'
-cask 'free-ruler'
+# cask 'free-ruler'
 cask 'goland'
-cask 'google-backup-and-sync'
+# cask 'google-backup-and-sync'
 cask 'google-chrome'
 cask 'gpg-suite'
 cask 'gimp'
@@ -77,10 +75,10 @@ cask 'iterm2'
 cask 'intellij-idea' # if you have license =D
 cask 'java'
 cask 'lens' # kube IDE
-cask 'microsoft-remote-desktop-beta'
+# cask 'microsoft-remote-desktop-beta'
 cask 'minikube'
 cask 'rescuetime'
-cask 'shuttle' # Maybe in the future
+# cask 'shuttle' # Maybe in the future
 cask 'slack'
 cask 'sublime-text'
 cask 'skype'
