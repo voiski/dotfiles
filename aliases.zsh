@@ -132,6 +132,19 @@ function bash-record-svg(){ # bash-record final_gif_name speed:optional cast_fil
 		# Missing speed
 }
 
+function screen-record-gif(){ # screen-record-gif in.mov speed:optional scale:optional
+	[ -z "$1" ] && echo "Usage: $0 <mov name>" && return 1
+	local mov_file=$1
+	! [ -f "${mov_file}" ] && echo "Error: File ${mov_file} not found!" && return 1
+	local rate=${2:-10}
+	local scale=${3:-600}
+	local gif_file=${mov_file%%.*}.gif
+	local size=$(ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=s=x:p=0 ${mov_file})
+	local height=$((${scale}*${size##*x}/${size%%x*}))
+	rm -f "${gif_file}"
+	ffmpeg -i "${mov_file}" -s ${scale}x${height} -pix_fmt rgb24 -r ${rate} -f gif - | gifsicle --optimize=3 --delay=3 > "${gif_file}"
+}
+
 function docker_bash(){ # up the container and enter in bash of it
   docker exec -it $1 bash
 }
