@@ -28,6 +28,7 @@ brew 'libusb' # required to identify id-token
 brew 'lnav'
 brew 'mackup'
 brew 'mas'
+brew 'meld' # git mergetool
 brew 'p7zip'
 brew 'packer'
 brew 'pngquant'

@@ -241,6 +241,22 @@
 	# Include summaries of merged commits in newly created merge commit messages
 	log = true
 
+  # Use https://yousseb.github.io/meld/ for mergetool
+  tool = meld
+
+[mergetool]
+
+  # Skip question, use meld
+  prompt = false
+
+[mergetool "meld"]
+
+  # Skip meld exit code confirmation
+  trustExitCode = true
+
+  # Config meld to properly get diff order
+  cmd = open -W -a Meld --args --auto-merge \"$(pwd)/$LOCAL\" \"$(pwd)/$BASE\" \"$(pwd)/$REMOTE\" --output=\"$(pwd)/$MERGED\"
+
 [push]
 
 	# https://git-scm.com/docs/git-config#git-config-pushdefault
