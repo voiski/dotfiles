@@ -23,7 +23,7 @@
 	"gpu_window_buffer": false,
 	"ignored_packages":
 	[
-		"Vintage"
+		"Vintage",
 	],
 	"indent_to_bracket": true,
 	"material_theme_compact_sidebar": true,
@@ -33,5 +33,5 @@
 	"tab_size": 2,
 	"theme": "Material-Theme.sublime-theme",
 	"translate_tabs_to_spaces": true,
-	"trim_trailing_white_space_on_save": true
+	"trim_trailing_white_space_on_save": true,
 }

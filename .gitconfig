@@ -8,10 +8,10 @@
 [alias]
 
   # List aliases
-  aliases = config --get-regexp alias 
+  aliases = config --get-regexp alias
 
   # Amend the currently staged files to the latest commit
-  amend = commit --amend --reuse-message=HEAD 
+  amend = commit --amend --reuse-message=HEAD
 
   # Get current branch
   branch-current = "!f(){  \
@@ -21,7 +21,7 @@
   }; f #"
 
   # Remove branches that have already been mergeith master
-  # a.k.a. ‘delete merged’ 
+  # a.k.a. ‘delete merged’
   branch-delete-merged = "!git branch --merged | grep -v '\\*' | xargs -n 1 git branch -d"
 
   # Delete current branch and fetch master
@@ -38,70 +38,70 @@
   }; f #"
 
   # Push to updstream
-  branch-push="!git push --set-upstream origin $(git branch-current) #" 
+  branch-push="!git push --set-upstream origin $(git branch-current) #"
 
   # Show verbose output
   branches = branch -a
 
   # Clone a repository including all submodules
-  c = clone --recursive 
+  c = clone --recursive
 
   # Commit all changes
-  ca = !git add -A && git commit -av 
+  ca = !git add -A && git commit -av
 
   # List contributors with number of commits
-  contributors = shortlog --summary --numbered 
+  contributors = shortlog --summary --numbered
 
   # Credit an author on the latest commit
-  credit = "!f() { git commit --amend --author \"$1 <$2>\" -C HEAD; }; f" 
+  credit = "!f() { git commit --amend --author \"$1 <$2>\" -C HEAD; }; f"
 
   # Show the diff between the latest commit and the current state
-  d = !"git diff-index --quiet HEAD -- || clear; git --no-pager diff --patch-with-stat" 
+  d = !"git diff-index --quiet HEAD -- || clear; git --no-pager diff --patch-with-stat"
 
   # `git di $number` shows the diff between the state `$number` revisions ago and the current state
-  di = !"d() { git diff --patch-with-stat HEAD~$1; }; git diff-index --quiet HEAD -- || clear; d" 
+  di = !"d() { git diff --patch-with-stat HEAD~$1; }; git diff-index --quiet HEAD -- || clear; d"
 
   # Find branches containing commit
-  find-branch = fb 
+  find-branch = fb
   fb = "!f() { git branch -a --contains $1; }; f"
 
   # Find commits by source code
-  find-code = fc 
+  find-code = fc
   fc = "!f() { git log --pretty=format:'%C(yellow)%h  %Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short -S$1; }; f"
 
   # Find commits by commit message
-  find-message = fm 
+  find-message = fm
   fm = "!f() { git log --pretty=format:'%C(yellow)%h  %Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short --grep=$1; }; f"
 
   # Find tags containing commit
-  find-tag = ft 
+  find-tag = ft
   ft = "!f() { git describe --always --contains $1; }; f"
 
   # Open github diff for the current branch
-  gitdiff="!open https://$(git repo-server)/$(git repo-user)/$(git repo-name)/compare/$(git branch-current) #" 
+  gitdiff="!open https://$(git repo-server)/$(git repo-user)/$(git repo-name)/compare/$(git branch-current) #"
 
   # Open github for the current branch
   github = gh
-  gh = "!open https://$(git repo-server)/$(git repo-user)/$(git repo-name)/tree/$(git branch-current) #" 
+  gh = "!open https://$(git repo-server)/$(git repo-user)/$(git repo-name)/tree/$(git branch-current) #"
 
   # Switch to a branch, creating it if necessary
-  go = "!f() { git checkout -b \"$1\" 2> /dev/null || git checkout \"$1\"; }; f" 
+  go = "!f() { git checkout -b \"$1\" 2> /dev/null || git checkout \"$1\"; }; f"
 
   # Animated grapth of current grapth
-  gource="!gource -s 0.5 --hide dirnames,filenames --follow-user \"$(git config user.name)\" #" 
+  gource="!gource -s 0.5 --hide dirnames,filenames --follow-user \"$(git config user.name)\" #"
 
   # View full history in colorized/fancy log
-  history = log --graph --full-history --all --color --pretty=format:"%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20%s" 
+  history = log --graph --full-history --all --color --pretty=format:"%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20%s"
 
   # Install pre commit message template in existing local repo
-  install-commit-template = !ln -s ~/.dotfiles/.git-templates/hooks/prepare-commit-msg .git/hooks/prepare-commit-msg 
+  install-commit-template = !ln -s ~/.dotfiles/.git-templates/hooks/prepare-commit-msg .git/hooks/prepare-commit-msg
 
   # View abbreviated SHA, description, and history graph of the latest 20 commits
-  l = log --pretty=oneline -n 20 --graph --abbrev-commit 
+  l = log --pretty=oneline -n 20 --graph --abbrev-commit
 
 
-  # Merge GitHub pull request on top of the current branch 
-  # if a branch name is specified, on top of the specified branch 
+  # Merge GitHub pull request on top of the current branch
+  # if a branch name is specified, on top of the specified branch
   merge-pr = mpr
   mpr = "!f() { \
     declare currentBranch=\"$(git symbolic-ref --short HEAD)\"; \
@@ -118,7 +118,7 @@
   }; f"
 
   # Pull in remote changes for the current repository and all its submodules
-  p = !"git pull; git submodule foreach git pull origin master" 
+  p = !"git pull; git submodule foreach git pull origin master"
 
   # Open pr entry for the current branch
   pr="!f(){\
@@ -126,16 +126,16 @@
     then open https://$(git repo-server)/$(git repo-user)/$(git repo-name)/compare/master...$(git branch-current);\
     else open https://$(git repo-server)/$(git repo-user)/$(git repo-name)/compare/$(git branch-current)?expand=1;\
     fi \
-  }; f" 
+  }; f"
 
   # Interactive rebase with the given number of latest commits
-  reb = "!r() { git rebase -i HEAD~$1; }; r" 
+  reb = "!r() { git rebase -i HEAD~$1; }; r"
 
   # Show verbose output
   remotes = remote -v
 
   # Get repo name
-  repo-name = "!x=$(git remote get-url origin) && x=$(basename $x) && echo ${x/.git/} #" 
+  repo-name = "!x=$(git remote get-url origin) && x=$(basename $x) && echo ${x/.git/} #"
 
   # Get repo server
   repo-server = "!x=$(git remote get-url origin) && \
@@ -144,19 +144,19 @@
   || echo $x | cut -d'/' -f3 | cut -d':' -f1"
 
   # Get repo user
-  repo-user = "!declare remote_url=$(git remote get-url origin);remote_url=$(dirname ${remote_url##*:});basename ${remote_url} #" 
+  repo-user = "!declare remote_url=$(git remote get-url origin);remote_url=$(dirname ${remote_url##*:});basename ${remote_url} #"
 
   # Remove the old tag with this name and tag the latest commit with it.
-  retag = "!r() { git tag -d $1 && git push origin :refs/tags/$1 && git tag $1; }; r" 
+  retag = "!r() { git tag -d $1 && git push origin :refs/tags/$1 && git tag $1; }; r"
 
   # View the current working tree status using the short format
-  s = status -s 
+  s = status -s
 
   # I like sourcetree, more then 'git gui'
-  source="!/Applications/SourceTree.app/Contents/Resources/stree ." 
+  source="!/Applications/SourceTree.app/Contents/Resources/stree ."
 
   # Show verbose output
-  tags = tag -l 
+  tags = tag -l
 
   # list objts by size https://stackoverflow.com/a/42544963/2985644
   size = !"git rev-list --objects --all | \
@@ -216,7 +216,7 @@
 [commit]
 
 	# https://help.github.com/articles/signing-commits-using-gpg/
-	gpgsign = false
+	gpgsign = true
 
 [diff]
 
@@ -271,7 +271,7 @@
 # Sourcetree default configuration
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path = 
+	path =
 
 [mergetool "sourcetree"]
 	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
