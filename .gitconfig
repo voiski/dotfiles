@@ -20,17 +20,20 @@
     || echo $branch; \
   }; f #"
 
-  # Remove branches that have already been mergeith master
+  # Retrieve default branch - expect main
+  branch-default = "!git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'"
+
+  # Remove branches that have already been mergeith main
   # a.k.a. ‘delete merged’
   branch-delete-merged = "!git branch --merged | grep -v '\\*' | xargs -n 1 git branch -d"
 
-  # Delete current branch and fetch master
+  # Delete current branch and fetch default branch
   branch-delete="!f(){ \
     declare currentBranch=$(git branch-current); \
     echo Delete ${currentBranch}?[y]; \
     read option; \
     if [ ${option} = 'y' ]; then \
-      git checkout master && \
+      git checkout $(git branch-default) && \
       git fetch --all --prune && \
       git pull && \
       git branch -D ${currentBranch}; \
@@ -123,7 +126,7 @@
   # Open pr entry for the current branch
   pr="!f(){\
     if [[ $(git repo-server) =~ gitlab ]]; \
-    then open https://$(git repo-server)/$(git repo-user)/$(git repo-name)/compare/master...$(git branch-current);\
+    then open https://$(git repo-server)/$(git repo-user)/$(git repo-name)/compare/$(git branch-default)...$(git branch-current);\
     else open https://$(git repo-server)/$(git repo-user)/$(git repo-name)/compare/$(git branch-current)?expand=1;\
     fi \
   }; f"
