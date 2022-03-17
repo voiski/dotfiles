@@ -430,7 +430,7 @@ function pomo(){
 				echo "    interruption: `date +%H:%M:%S`" >> ${today_pomo}
 			fi
 			;;
-		interruptions) [ -f ${monthly_interruptions} ] && yq r -C ${monthly_interruptions} || echo "No interruption this month!";;
+		interruptions) [ -f ${monthly_interruptions} ] && yq e -C ${monthly_interruptions} || echo "No interruption this month!";;
 		list|ls|l) ls -1 ~/.pomo/pomo_* | xargs -L 1 basename | cut -b 6-13 | xargs -I {} echo "pomo p {}";;
 		start|s) echo "type fg and ctrl+c to STOP!" && _pomo_start_round &;;
 		description|d)
@@ -441,7 +441,7 @@ function pomo(){
 				echo "    description: ${description}" >> ${today_pomo}
 			fi
 			;;
-		print|p|) [ -f ${today_pomo} ] && yq r -C ${today_pomo} || echo "No pomo yet!";;
+		print|p|) [ -f ${today_pomo} ] && yq e -C ${today_pomo} || echo "No pomo yet!";;
 		*)
 			echo 'pomo [action] [arg]
 Ex:
