@@ -15,6 +15,7 @@ brew tap homebrew/bundle
 brew bundle
 
 # Make ZSH the default shell environment
+echo $(which zsh) | sudo tee -a /etc/shells
 chsh -s $(which zsh)
 
 # Extra completions
