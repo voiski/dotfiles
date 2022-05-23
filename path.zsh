@@ -21,3 +21,10 @@ export PATH="$DOTFILES/bin:$PATH"
 
 # Load golang global installed binaries
 export PATH="$HOME/go/bin:$PATH"
+
+#################################
+# Linux
+if [[ "$OSTYPE" == "darwin"* ]]; then return; fi
+
+# Map brew for linux
+export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
