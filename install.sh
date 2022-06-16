@@ -45,7 +45,7 @@ ln -s $HOME/.dotfiles/.sublime/User $HOME/Library/Application\ Support/Sublime\ 
 ln -s $HOME/.dotfiles/.mackup.cfg $HOME/.mackup.cfg
 
 # Symlink the git config file to the home directory
-rm -f $HOME/.gitconfig
+rm -f $HOME/.gitconfig $HOME/.gitignore_global
 ln -s $HOME/.dotfiles/.gitconfig $HOME/.gitconfig
 
 # TODO: Configure istio brew keg
