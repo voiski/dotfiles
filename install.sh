@@ -4,7 +4,7 @@ echo "Setting up your Mac..."
 
 # Check for Homebrew and install if we don't have it
 if test ! $(which brew); then
-  /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
 # Update Homebrew recipes
@@ -28,8 +28,8 @@ npm install --global yarn
 # ZSH - Prezto =D
 # http://sourabhbajaj.com/mac-setup/iTerm/zsh.html
 git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$HOME}/.zprezto"
-setopt EXTENDED_GLOB
-for rcfile in "${ZDOTDIR:-$HOME}"/.zprezto/runcoms/^README.md(.N); do
+for rcfile in $(ls "${ZDOTDIR:-$HOME}"/.zprezto/runcoms/); do
+  [ "$rcfile" == 'README.md' ] || \
   ln -s "$rcfile" "${ZDOTDIR:-$HOME}/.${rcfile:t}"
 done
 
