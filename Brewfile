@@ -29,6 +29,7 @@ brew 'lnav'
 # brew 'mackup'
 brew 'mas'
 brew 'meld' # git mergetool
+brew 'notion'
 brew 'p7zip'
 # brew 'packer'
 brew 'pngquant'
@@ -92,6 +93,8 @@ cask 'virtualbox'
 cask 'virtualbox-extension-pack'
 cask 'visual-studio-code'
 cask 'vlc'
+cask 'webex'
+cask 'whatsapp'
 
 # Quicklook
 cask 'qlcolorcode'
