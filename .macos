@@ -1,4 +1,5 @@
-#!/usr/bin/env bash
+#!/usr/bin/env bash -x
+set -x
 
 # Thanks to Mathias Bynens! https://mths.be/macos
 
@@ -269,8 +270,8 @@ defaults write com.apple.TextEdit RichText -int 0
 defaults write com.apple.TextEdit PlainTextEncoding -int 4
 defaults write com.apple.TextEdit PlainTextEncodingForWrite -int 4
 
-# Show 24 hours a day
-defaults write com.apple.ical "number of hours displayed" 24
+# Show 12 hours a day
+defaults write com.apple.ical "number of hours displayed" 12
 
 # Week should start on Monday
 defaults write com.apple.ical "first day of the week" 1
