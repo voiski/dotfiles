@@ -10,6 +10,7 @@ brew 'awscli'
 brew 'bash' # Bash 4
 brew 'coreutils' # Those that come with macOS are outdated
 brew 'ctop'
+brew 'ffmpeg'
 brew 'gettext'
 brew 'gifsicle'
 brew 'git'
@@ -40,6 +41,7 @@ brew 'telnet'
 brew 'tmux'
 brew 'trash'
 brew 'tree'
+brew 'the-unarchiver' # finder rar support
 brew 'vegeta'
 brew 'warrensbox/tap/tfswitch'
 brew 'watch'
@@ -50,6 +52,7 @@ brew 'zsh'
 brew 'zsh-completions'
 
 # Development
+brew 'openjdk'
 brew 'go'
 brew 'node'
 brew 'terraform'
@@ -73,11 +76,13 @@ cask 'gimp'
 cask 'grammarly'
 # cask 'insomnia' # Like postman
 cask 'iterm2'
-# cask 'intellij-idea-ce' # If you don't have license
-cask 'intellij-idea' # if you have license =D
+cask 'intellij-idea-ce' # If you don't have license
+# cask 'intellij-idea' # if you have license =D
 cask 'java'
 cask 'lens' # kube IDE
+cask 'microsoft-excel'
 # cask 'microsoft-remote-desktop-beta'
+cask 'microsoft-word'
 cask 'minikube'
 cask 'rescuetime'
 # cask 'shuttle' # Maybe in the future
@@ -93,7 +98,8 @@ cask 'virtualbox'
 cask 'virtualbox-extension-pack'
 cask 'visual-studio-code'
 cask 'vlc'
-cask 'webex'
+cask 'zoom'
+# cask 'webex'
 cask 'whatsapp'
 
 # Quicklook
