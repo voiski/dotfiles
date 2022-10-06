@@ -5,6 +5,7 @@ tap 'homebrew/bundle'
 tap 'teamookla/speedtest'
 
 # Install Binaries
+brew 'asdf'
 brew 'asciinema'
 brew 'awscli'
 brew 'bash' # Bash 4
@@ -14,49 +15,43 @@ brew 'ffmpeg'
 brew 'gettext'
 brew 'gifsicle'
 brew 'git'
-# brew 'gitlab-runner'
+brew 'gitlab-runner' unless system "ls ~/.personal_laptop"
 brew 'graphviz'
 brew 'grep'
 brew 'grpcurl'
 brew 'hub'
-# brew 'jfrog-cli-go'
 brew 'jpegoptim'
 brew 'jq'
-brew 'kops'
 brew 'kubernetes-cli'
-brew 'kubernetes-helm'
+brew 'helm'
 brew 'libusb' # required to identify id-token
 brew 'lnav'
+brew 'minikube'
 # brew 'mackup'
 brew 'mas'
-brew 'meld' # git mergetool
-brew 'notion'
 brew 'p7zip'
 # brew 'packer'
 brew 'pngquant'
 brew 'speedtest'
 brew 'svn' # other brews depend on this one
 brew 'telnet'
-# brew 'terragrunt'
 brew 'tmux'
 brew 'trash'
 brew 'tree'
-brew 'the-unarchiver' # finder rar support
 brew 'vegeta'
-brew 'warrensbox/tap/tfswitch'
 brew 'watch'
 brew 'wget'
 brew 'yamllint'
 brew 'yq'
-brew 'zsh'
-brew 'zsh-completions'
+
+# Those are now default on mac
+# brew 'zsh'
+# brew 'zsh-completions'
 
 # Development
 brew 'openjdk'
 brew 'go'
 brew 'node'
-brew 'terraform'
-brew 'rbenv'
 
 # Apps
 cask 'adobe-acrobat-reader'
@@ -65,10 +60,10 @@ cask 'caffeine'
 # cask 'chef/chef/chefdk'
 cask 'charles'
 cask 'clocker'
-cask 'docker'
-cask 'firefox'
+cask 'docker' if system "ls ~/.personal_laptop"
+# cask 'firefox'
 # cask 'free-ruler'
-cask 'goland'
+cask 'goland' # go IDE
 # cask 'google-backup-and-sync'
 cask 'google-chrome'
 cask 'gpg-suite'
@@ -78,19 +73,21 @@ cask 'grammarly'
 cask 'iterm2'
 cask 'intellij-idea-ce' # If you don't have license
 # cask 'intellij-idea' # if you have license =D
-cask 'java'
 cask 'lens' # kube IDE
-cask 'microsoft-excel'
+cask 'meld' # git mergetool
+cask 'microsoft-excel' if system "ls ~/.personal_laptop"
 # cask 'microsoft-remote-desktop-beta'
-cask 'microsoft-word'
-cask 'minikube'
+cask 'microsoft-word' if system "ls ~/.personal_laptop"
+cask 'notion'
+cask 'rectangle'
 cask 'rescuetime'
 # cask 'shuttle' # Maybe in the future
 cask 'slack'
 cask 'sublime-text'
 # cask 'skype'
 cask 'sourcetree'
-cask 'spin' # spinnaker cli
+# cask 'spin' # spinnaker cli
+cask 'the-unarchiver' # finder rar support
 # cask 'transmit'
 cask 'vagrant'
 # cask 'vault'
@@ -100,7 +97,7 @@ cask 'visual-studio-code'
 cask 'vlc'
 cask 'zoom'
 # cask 'webex'
-cask 'whatsapp'
+cask 'whatsapp' if system "ls ~/.personal_laptop"
 
 # Quicklook
 cask 'qlcolorcode'
@@ -125,4 +122,3 @@ cask 'font-source-serif-pro'
 # mas 'The Unarchiver', id: 425424353
 # mas 'Things', id: 904280696
 # mas 'Tweetbot', id: 1384080005
-# mas 'WhatsApp', id: 1147396723 

@@ -19,10 +19,9 @@ if [[ -s "$HOME/.dotfiles/dotfilesconfidential/aliases.zsh" ]]; then
 fi
 
 # Session Envs
-export GOPATH=$(go env GOPATH)
-export GO111MODULE=on
 export VISUAL='subl -w'
 export EDITOR=vi
 
-# load rbenv
-eval "$(rbenv init -)"
+export GOPATH=$(go env GOPATH)
+export GO111MODULE=on
+export GEM_HOME=$HOME/.gem

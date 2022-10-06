@@ -2,8 +2,17 @@
 
 echo "Setting up your Mac..."
 
+echo "Is it a personal machine? [yes,no]"
+read -r personal_laptop
+if [ "${personal_laptop}" = "yes" ];then
+  touch ${HOME}/.personal_laptop
+else
+  echo "You asnwered \"${personal_laptop}\", not personal computer. Are you sure? (ctrl+c if not)"
+  read -r
+fi
+
 # Check for Homebrew and install if we don't have it
-if test ! $(which brew); then
+if test ! "$(which brew)"; then
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
