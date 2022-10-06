@@ -23,6 +23,9 @@ brew update
 brew tap homebrew/bundle
 brew bundle
 
+# link go default location
+ln -s $(brew --prefix golang) ${HOME}/go
+
 # Make ZSH the default shell environment
 echo $(which zsh) | sudo tee -a /etc/shells
 chsh -s $(which zsh)
@@ -37,9 +40,8 @@ npm install --global yarn
 # ZSH - Prezto =D
 # http://sourabhbajaj.com/mac-setup/iTerm/zsh.html
 git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$HOME}/.zprezto"
-for rcfile in $(ls "${ZDOTDIR:-$HOME}"/.zprezto/runcoms/); do
-  [ "$rcfile" == 'README.md' ] || \
-  ln -s "$rcfile" "${ZDOTDIR:-$HOME}/.${rcfile:t}"
+for rcfile in "${ZDOTDIR:-$HOME}"/.zprezto/runcoms/z*; do
+  ln -sf "$rcfile" "${ZDOTDIR:-$HOME}/.${rcfile:t}"
 done
 
 # Removes .zs? from $HOME (if it exists) and symlinks the .zshrc/.zpreztorc file from the .dotfiles
