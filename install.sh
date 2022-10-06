@@ -59,6 +59,22 @@ ln -s $HOME/.dotfiles/.mackup.cfg $HOME/.mackup.cfg
 rm -f $HOME/.gitconfig $HOME/.gitignore_global
 ln -s $HOME/.dotfiles/.gitconfig $HOME/.gitconfig
 
+if ! [ -f ~/.ssh/id_ed25519 ];then
+  echo "Enter email for its ssh key"
+  read -s target_email
+  echo "Generating new ssh key"
+  ssh-keygen -t ed25519 -C ${target_email}
+  eval "$(ssh-agent -s)"
+  ssh-add --apple-use-keychain ~/.ssh/id_ed25519
+  cat >> ~/.ssh/config <<-EOF
+Host *
+  AddKeysToAgent yes
+  UseKeychain yes
+  IdentityFile ~/.ssh/id_ed25519
+EOF
+
+fi
+
 # TODO: Configure istio brew keg
 # Install istio
 # curl -L https://git.io/getLatestIstio | sh -

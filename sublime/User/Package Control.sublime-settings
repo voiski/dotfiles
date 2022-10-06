@@ -5,6 +5,7 @@
 	],
 	"installed_packages":
 	[
+		"A File Icon",
 		"Alignment",
 		"Case Conversion",
 		"Dockerfile Syntax Highlighting",
@@ -13,6 +14,6 @@
 		"Material Theme",
 		"Oceanic Next Color Scheme",
 		"Package Control",
-		"Pretty JSON"
+		"Pretty JSON",
 	],
 }
