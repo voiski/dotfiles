@@ -81,11 +81,11 @@
   ft = "!f() { git describe --always --contains $1; }; f"
 
   # Open github diff for the current branch
-  gitdiff="!open https://$(git repo-server)/$(git repo-user)/$(git repo-name)/compare/$(git branch-current) #"
+  gitdiff="!open https://$(git repo-server)/$(git repo-path)/compare/$(git branch-current) #"
 
   # Open github for the current branch
   github = gh
-  gh = "!open https://$(git repo-server)/$(git repo-user)/$(git repo-name)/tree/$(git branch-current) #"
+  gh = "!open https://$(git repo-server)/$(git repo-path)/tree/$(git branch-current) #"
 
   # Switch to a branch, creating it if necessary
   go = "!f() { git checkout -b \"$1\" 2> /dev/null || git checkout \"$1\"; }; f"
@@ -126,8 +126,8 @@
   # Open pr entry for the current branch
   pr="!f(){\
     if [[ $(git repo-server) =~ gitlab ]]; \
-    then open https://$(git repo-server)/$(git repo-user)/$(git repo-name)/compare/$(git branch-default)...$(git branch-current);\
-    else open https://$(git repo-server)/$(git repo-user)/$(git repo-name)/compare/$(git branch-current)?expand=1;\
+    then open https://$(git repo-server)/$(git repo-path)/compare/$(git branch-default)...$(git branch-current);\
+    else open https://$(git repo-server)/$(git repo-path)/compare/$(git branch-current)?expand=1;\
     fi \
   }; f"
 
@@ -148,6 +148,9 @@
 
   # Get repo user
   repo-user = "!declare remote_url=$(git remote get-url origin);remote_url=$(dirname ${remote_url##*:});basename ${remote_url} #"
+
+  # Get repo path
+  repo-path = "!declare remote_url=$(git remote get-url origin);remote_url=${remote_url##*:};echo ${remote_url%%.git} #"
 
   # Remove the old tag with this name and tag the latest commit with it.
   retag = "!r() { git tag -d $1 && git push origin :refs/tags/$1 && git tag $1; }; r"

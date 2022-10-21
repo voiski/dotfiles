@@ -51,7 +51,6 @@ brew 'yq'
 # Development
 brew 'openjdk'
 brew 'go'
-brew 'node'
 
 # Apps
 cask 'adobe-acrobat-reader'
@@ -79,6 +78,7 @@ cask 'microsoft-excel' if system "ls ~/.personal_laptop"
 # cask 'microsoft-remote-desktop-beta'
 cask 'microsoft-word' if system "ls ~/.personal_laptop"
 cask 'notion'
+cask 'rancher' unless system "ls ~/.personal_laptop"  # free docker alternative
 cask 'rectangle'
 cask 'rescuetime'
 # cask 'shuttle' # Maybe in the future

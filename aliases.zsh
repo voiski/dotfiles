@@ -92,6 +92,12 @@ alias webify='mogrify -resize 690\> *.png'
 alias wget='wget -c'
 alias brewv="curl -s https://gist.githubusercontent.com/voiski/973ec1fe0e4b05d52133c9d0438eb2de/raw//brewv.sh | bash -s"
 
+function load-rancher-tmp(){
+	export DOCKER_HOST_TMP=${HOME}/.rancher-desktop
+	[ -d $DOCKER_HOST_TMP ] || mkdir -p $DOCKER_HOST_TMP &> /dev/null
+	echo $DOCKER_HOST_TMP
+}
+
 function bash-record-asciinema(){ # bash-record-asciinema cast_name no_override:optional
 	[ -z "$1" ] && echo "Usage: $0 <name>" && return 1
 	local cast_file="$1"
@@ -111,12 +117,13 @@ function bash-play(){ # bash-play cast_name
 
 function bash-record(){ # bash-record final_gif_name speed:optional cast_file:optional
 	[ -z "$1" ] && echo "Usage: $0 <name>" && return 1
-	local cast_file=${3:-/tmp/$1.cast}
+	local cast_file=${3:-$(load-rancher-tmp)/$1.cast}
+	echo "Recording at: ${cast_file}"
 	(bash-record-asciinema $cast_file ${3} || [ $? = 215 ]) || return 1
 	time docker run --rm -v $(dirname $cast_file):/tmp -v $PWD:/data asciinema/asciicast2gif \
 		-s ${2:-10} \
 		-S 1 \
-		$cast_file "./$1.gif"
+		/tmp/$(basename $cast_file) "./$1.gif"
 	# https://www.robinstewart.com/blog/2018/10/adding-a-delay-to-the-end-of-an-animated-gif/
 	if command -v gifsicle &>/dev/null
 	then gifsicle -U $1.gif "#0--2" -d100 "#-1" -O2 > $1-optimised.gif
@@ -125,7 +132,7 @@ function bash-record(){ # bash-record final_gif_name speed:optional cast_file:op
 
 function bash-record-svg(){ # bash-record final_gif_name speed:optional cast_file:optional
 	[ -z "$1" ] && echo "Usage: $0 <name>" && return 1
-	local cast_file=${3:-/tmp/$1.cast}
+	local cast_file=${3:-$(load-rancher-tmp)/$1.cast}
 	(bash-record-asciinema $cast_file ${3} || [ $? = 215 ]) || return 1
 	time docker run --rm -v $(dirname $cast_file):/tmp -v $PWD:/data voiski/svg-term-cli \
 		--in "/tmp/$1.cast" --out "/data/$1.svg"

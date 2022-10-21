@@ -1,30 +1,31 @@
 path=(
+# Ruby
+$HOME/.gem/bin
+
+# ASDF shims
+$HOME/.asdf/shims
+
 # Load Node global installed binaries
-$HOME/.node/bin:$PATH
+$HOME/.node/bin
 
 # Node yarn modules
-$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH
+$HOME/.yarn/bin
+$HOME/.config/yarn/global/node_modules/.bin
 
 # Use project specific binaries before global ones
-node_modules/.bin:vendor/bin:$PATH
+node_modules/.bin
+vendor/bin
 
 # Make sure coreutils are loaded before system commands
 # I've disabled this for now because I only use "ls" which is
 # referenced in my aliases.zsh file directly.
-#  $(brew --prefix coreutils)/libexec/gnubin:$PATH
-
-# Local bin directories before anything else
-/usr/local/bin:/usr/local/sbin:$PATH
-
-# Load custom commands
-# Disabled this because I have no custom binaries at the moment.
-$DOTFILES/bin:$PATH
+#  $(brew --prefix coreutils)/libexec/gnubin
 
 # Load golang global installed binaries
-$HOME/go/bin:$PATH
+$HOME/go/bin
 
-# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
-$HOME/.rvm/bin
+# rancher bin - includes docker
+$HOME/.rd/bin
 
 # Always keep path here
 $path
