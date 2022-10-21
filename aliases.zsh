@@ -338,9 +338,16 @@ alias -s {yml,yaml}=code
 # pomodoro
 #################################
 function pomo(){
+	[ -d ~/.pomo ] || mkdir -p ~/.pomo
+
 	function _pomo_file(){
 		local t=${1:-$(date +%Y%m%d)}
 		echo ~/.pomo/pomo_${t}.yml
+	}
+
+	function _pomo_sleep(){
+		# Create named proccess
+		echo $1 | xargs -I {pomo} sleep {pomo}
 	}
 
 	function _pomo_start_round(){
@@ -372,7 +379,7 @@ function pomo(){
 		local start=`date +%H:%M:%S`
 
 		echo "  - start: ${start}" >> ${today_pomo}
-		_pomo_session 25 work "New pomo starting ${start}"
+		_pomo_session 25 work "New pomo starting ${start}" alert
 		echo "    done: `date +%H:%M:%S`" >> ${today_pomo}
 
 		_pomo_session ${break_time} "break" "Pomo done, take a ${break_type} break" alert
@@ -392,9 +399,9 @@ function pomo(){
 		local est=$(_pomo_est ${duration})
 		_pomo_notification "${msg} - ${duration} minutes duration - ${est}" ${act} Glass
 
-		sleep $((duration_secs-25))
+		_pomo_sleep $((duration_secs-25))
 		_pomo_notification "25 secs to finish ${ctx} - ${est}"
-		sleep 25
+		_pomo_sleep 25
 	}
 
 	function _pomo_notification(){
@@ -425,30 +432,54 @@ function pomo(){
 
 	local start_date=$(date::string)
 	local action=$1
-	local today_pomo=$(_pomo_file ${2})
+	local today_pomo=$(_pomo_file)
 	local monthly_interruptions=~/.pomo/interruptions_`date +%Y%m_%B`.yml
 	case "${action}" in
 		edit|e)
+			today_pomo=$(_pomo_file $2)
 			eval "${VISUAL} ${today_pomo}"
 			;;
 		interruption|i)
 			echo "- `date`" >>! ${monthly_interruptions}
-			if [ -f ${today_pomo} ] && ! tail -1 ${today_pomo} | grep interruption &>/dev/null; then
-				echo "    interruption: `date +%H:%M:%S`" >> ${today_pomo}
+			if ! [ -f ${today_pomo} ] || tail -1 ${today_pomo} | grep interruption &>/dev/null; then
+				echo "There is no pomo file or there is already an interruption for this pomo!"
+				return
+			fi
+			echo "    interruption: `date +%H:%M:%S`" >> ${today_pomo}
+			local description="${@: 2}"
+			if [ -n "${description}" ]
+			then echo "    interruption_description: ${description}" >> ${today_pomo}
 			fi
 			;;
 		interruptions) [ -f ${monthly_interruptions} ] && yq e -C ${monthly_interruptions} || echo "No interruption this month!";;
 		list|ls|l) ls -1 ~/.pomo/pomo_* | xargs -L 1 basename | cut -b 6-13 | xargs -I {} echo "pomo p {}";;
 		start|s) echo "type fg and ctrl+c to STOP!" && _pomo_start_round &;;
-		description|d)
-			today_pomo=$(_pomo_file)
-			shift
-			local description="${@}"
-			if [ -f ${today_pomo} ] && ! tail -1 ${today_pomo} | grep description &>/dev/null; then
-				echo "    description: ${description}" >> ${today_pomo}
+		stop) 
+			local pomo_pid=$(ps aux | grep 'sleep {pomo}' | grep -v 'grep' | awk '{print $2}')
+			if [ -z "${pomo_pid}" ];then
+				echo "No pomo is running now"
+				return
 			fi
+			local parent_pomo_pid=$(ps -o ppid= -p ${pomo_pid}) # parent id
+			echo "Run above to kill pomo pid ${parent_pomo_pid}"
+  			echo kill ${parent_pomo_pid} ${pomo_pid}
 			;;
-		print|p|) [ -f ${today_pomo} ] && yq e -C ${today_pomo} || echo "No pomo yet!";;
+		description|d)
+			local description="${@: 2}"
+			if [ -z "${description}" ];then
+				echo "Missing description!"
+				return
+			fi
+			if ! [ -f ${today_pomo} ] || tail -1 ${today_pomo} | grep description &>/dev/null; then
+				echo "There is no pomo file or there is already an description for this pomo!"
+				return
+			fi
+			echo "    description: ${@}" >> ${today_pomo}
+			;;
+		print|p|) 
+			today_pomo=$(_pomo_file $2)
+			[ -f ${today_pomo} ] && yq e -C ${today_pomo} || echo "No pomo yet!"
+			;;
 		*)
 			echo 'pomo [action] [arg]
 Ex:
