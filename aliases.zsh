@@ -125,8 +125,9 @@ function bash-record(){ # bash-record final_gif_name speed:optional cast_file:op
 		-S 1 \
 		/tmp/$(basename $cast_file) "./$1.gif"
 	# https://www.robinstewart.com/blog/2018/10/adding-a-delay-to-the-end-of-an-animated-gif/
-	if command -v gifsicle &>/dev/null
-	then gifsicle -U $1.gif "#0--2" -d100 "#-1" -O2 > $1-optimised.gif
+	if command -v gifsicle &>/dev/null; then
+		rm -f $1-optimised.gif
+		gifsicle -U $1.gif "#0--2" -d100 "#-1" -O2 > $1-optimised.gif
 	fi
 }
 
@@ -342,12 +343,24 @@ function pomo(){
 
 	function _pomo_file(){
 		local t=${1:-$(date +%Y%m%d)}
+		if [ "${t:0:1}" = "-" ]; then
+			_pomo_files $((${t:1}+1)) | head -1
+			return
+		fi
 		echo ~/.pomo/pomo_${t}.yml
+	}
+
+	function _pomo_files(){
+		ls -1 ~/.pomo/pomo_* | tail -${1:-10}
 	}
 
 	function _pomo_sleep(){
 		# Create named proccess
 		echo $1 | xargs -I {pomo} sleep {pomo}
+	}
+
+	function _pomo_stats(){
+		ps aux | grep 'sleep {pomo}' | grep -v 'grep' | awk '{print $2}'
 	}
 
 	function _pomo_start_round(){
@@ -452,17 +465,45 @@ function pomo(){
 			fi
 			;;
 		interruptions) [ -f ${monthly_interruptions} ] && yq e -C ${monthly_interruptions} || echo "No interruption this month!";;
-		list|ls|l) ls -1 ~/.pomo/pomo_* | xargs -L 1 basename | cut -b 6-13 | xargs -I {} echo "pomo p {}";;
-		start|s) echo "type fg and ctrl+c to STOP!" && _pomo_start_round &;;
-		stop) 
-			local pomo_pid=$(ps aux | grep 'sleep {pomo}' | grep -v 'grep' | awk '{print $2}')
+		list|ls|l) 
+			local limit=${2:-20}
+			echo "Print last ${limit}"
+			_pomo_files ${limit} | xargs -L 1 basename | cut -b 6-13 | xargs -I {} echo "pomo p {}"
+			;;
+		start|s)
+			local pomo_pid=$(_pomo_stats)
+			if [ -n "${pomo_pid}" ];then
+				echo "There is already a pomo session running, stop it first!"
+				return
+			fi
+			echo "type fg and ctrl+c to STOP!"
+			_pomo_start_round &
+			;;
+		skip)
+			local pomo_pid=$(_pomo_stats)
+			if [ -z "${pomo_pid}" ];then
+				echo "No pomo is running now"
+				return
+			fi
+  			kill ${pomo_pid}
+			;;
+		stats)
+			local pomo_pid=$(_pomo_stats)
+			if [ -z "${pomo_pid}" ];then
+				echo "No pomo is running now"
+				return
+			fi
+			echo "Pomo is running"
+			;;
+		stop)
+			local pomo_pid=$(_pomo_stats)
 			if [ -z "${pomo_pid}" ];then
 				echo "No pomo is running now"
 				return
 			fi
 			local parent_pomo_pid=$(ps -o ppid= -p ${pomo_pid}) # parent id
 			echo "Run above to kill pomo pid ${parent_pomo_pid}"
-  			echo kill ${parent_pomo_pid} ${pomo_pid}
+  			kill ${parent_pomo_pid} ${pomo_pid}
 			;;
 		description|d)
 			local description="${@: 2}"
