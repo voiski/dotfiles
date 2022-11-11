@@ -1,24 +1,13 @@
-# Terraform version
-load-tfswitch() {
-  local tfswitchrc_path=".tfswitchrc"
-
-  if [ -f "$tfswitchrc_path" ]; then
-    tfswitch
-  fi
-}
-add-zsh-hook chpwd load-tfswitch
-load-tfswitch
-
 # Terragrunt version
-load-tgswitch() {
-  local tgswitchrc_path=".tgswitchrc"
+load-asdf() {
+  local asdfrc_path=".tool-versions"
 
-  if [ -f "$tgswitchrc_path" ]; then
-    tgswitch
+  if [ -f "$asdfrc_path" ]; then
+    asdf install
   fi
 }
-add-zsh-hook chpwd load-tgswitch
-load-tgswitch
+add-zsh-hook chpwd load-asdf
+load-asdf
 
 # Dot envs
 load-dotenv() {
