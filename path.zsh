@@ -1,4 +1,7 @@
 path=(
+# My dots
+$HOME/.dotfiles/bin
+
 # Ruby
 $HOME/.gem/bin
 

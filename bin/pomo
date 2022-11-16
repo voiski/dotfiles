@@ -1,0 +1,249 @@
+#!/bin/bash
+# pomodoro
+#################################
+[ -d ~/.pomo ] || mkdir -p ~/.pomo
+
+function pomo::file(){
+    local -r t=${1:-$(date +%Y%m%d)}
+    if [ "${t:0:1}" = "-" ]; then
+        pomo::files $((${t:1}+1)) | head -1
+        return
+    fi
+    echo ~/.pomo/pomo_"${t}".yml
+}
+
+function pomo::files(){
+    find ~/.pomo -name 'pomo_*' | sort | tail -"${1:-10}"
+}
+
+function pomo::sleep(){
+    # Create named sleep proccess
+    echo "$2" | xargs -I "{pomo_$1_}" sleep "{pomo_$1_}"
+}
+
+function pomo::stats(){
+    local -r root=$(pgrep -f 'pomo start')
+    if [ -z "$1" ]; then
+        echo "$root"
+        return
+    fi
+    pgrep -P "$root"
+}
+
+function pomo::stats_details(){
+    cat <<-STAT | sed -r 's/^ {4}//'
+    Pomo is running...
+
+    [Total]
+    Sessions:   $(grep -c '\- round ' "$today_pomo")
+    Pomos:      $(grep -c '\- start:' "$today_pomo")
+    Interrups:  $(grep -c ' interruption:' "$today_pomo")
+
+    [Current/last]
+    Current round: $(yq -r '.sessions.-1|keys|.0' "$today_pomo")
+    Current pomo:  $(yq -r '.sessions.-1.*.-1.start' "$today_pomo") - $(yq -r '.sessions.-1.*.-1.done' "$today_pomo" | sed 's/null/running.../')
+STAT
+    if "$(yq -r '.sessions.-1.*.-1| has("interruption")' "$today_pomo")"; then
+        echo "Interrupted:   $(yq -r '.sessions.-1.*.-1.interruption_description' "$today_pomo")"
+    fi
+    local start_time sleep_time
+    start_time=$(yq -r '.sessions.-1.*.-1.done' "$today_pomo")
+    if [ "${start_time}" == "null" ];then
+        start_time=$(yq -r '.sessions.-1.*.-1.start' "$today_pomo")
+        sleep_time=25
+        printf "Est ending:    " 
+    else
+        local -r sleep_pid=$(pomo::stats sleep)
+        sleep_time=$(ps -p "${sleep_pid}" -o command | tail -1 | cut -d'_' -f2)
+        sleep_time=$((sleep_time/60))
+        printf "Next session:  " 
+    fi
+    pomo::est "$sleep_time" "$start_time"
+}
+
+function pomo::start_round(){
+    local -r round=${1:-1}
+    if ! [ -f "${today_pomo}" ];then
+        echo "date: $(date +%A\ %b.\ %e,\ %Y)" > "${today_pomo}"
+        echo "sessions:" >> "${today_pomo}"
+    fi
+    echo "Starting new round ${round}"
+    echo "- round $(date +%H:%M):" >> "${today_pomo}"
+    pomo::start_15 short "${today_pomo}"
+    pomo::start_15 short "${today_pomo}"
+    pomo::start_15 short "${today_pomo}"
+    pomo::start_15 LONG "${today_pomo}" 15
+    # 8h of work, 4 rounds is more then enough
+    if [ "${round}" -gt 4 ];then
+        pomo::notification "Last round, stopping..." alert Sosumi
+        return 0
+    fi
+    (( round+=1 ))
+    pomo::start_round ${round}
+}
+
+function pomo::start_15(){
+    date::guard
+    local -r break_type=$1
+    local -r today_pomo=$2
+    local -r break_time=${3:-5}
+    local -r start=$(date::now)
+
+    echo "  - start: ${start}" >> "${today_pomo}"
+    pomo::session 25 work "New pomo starting ${start}" alert
+    echo "    done: $(date::now)" >> "${today_pomo}"
+
+    pomo::session "${break_time}" "break" "Pomo done, take a ${break_type} break" alert
+}
+
+function pomo::est(){
+    if [ -n "$2" ];
+    then date -jf '%H:%M:%S' -v+"${1}"M "$2" +'%H:%M:%S'
+    else date -v+"${1}"M +'%H:%M'
+    fi
+}
+
+function pomo::session(){
+    local -r duration=$1
+    local -r duration_secs=$((duration*60))
+    local -r ctx=$2
+    local -r msg=$3
+    local -r act=${4}
+
+    local -r est=$(pomo::est "${duration}")
+    pomo::notification "${msg} - ${duration} minutes duration - est ${est}" "${act}" Glass
+
+    pomo::sleep "${duration_secs}" $((duration_secs-25))
+    pomo::notification "25 secs to finish ${ctx} - est ${est}"
+    pomo::sleep "${duration_secs}" 25
+}
+
+function pomo::notification(){
+    local -r msg=${1}
+    local -r act=${2}
+    local -r sound=${3:-Tink}
+    osascript -e "display notification \"${msg}\" with title \"Pomodoro\" sound name \"${sound}\""
+    if [ "${act}" = "alert" ]
+    then osascript -e "display alert \"Pomodoro\" message \"${msg}\"" > /dev/null
+    fi
+}
+
+function date::guard() {
+    local -r current_date=$(date::string)
+    if [ "${current_date}" = "${start_date}" ]
+    then return
+    fi
+    local -r msg="It is now a new day[${current_date}], stopping ${start_date} pomo session..."
+    pomo::notification "${msg}" alert Sosumi &
+    echo "${msg}"
+    echo 'Existing pomo, Start a new one if you like with "pomo s"'
+    exit 1
+}
+
+function date::string(){
+    date +%b.\ %e,\ %Y
+}
+
+function date::now(){
+    date +%H:%M:%S
+}
+
+start_date=$(date::string)
+action=$1
+today_pomo=$(pomo::file)
+monthly_interruptions=~/.pomo/interruptions_$(date +%Y%m_%B).yml
+case "${action}" in
+    edit|e)         # edit the current pomodoro session; pass -1..x to edit past sessions
+        today_pomo=$(pomo::file "$2")
+        eval "${VISUAL} ${today_pomo}"
+        ;;
+    interruption|i) # registry interruptions in current session; you can provide reason description
+        echo "- $(date)" >>! "${monthly_interruptions}"
+        if ! [ -f "${today_pomo}" ] || tail -1 "${today_pomo}" | grep interruption &>/dev/null; then
+            echo "There is no pomo file or there is already an interruption for this pomo!"
+            exit 1
+        fi
+        echo "    interruption: $(date::now)" >> "${today_pomo}"
+        description="${*: 2}"
+        if [ -n "${description}" ]
+        then echo "    interruption_description: ${description}" >> "${today_pomo}"
+        fi
+        ;;
+    interruptions)  # print monthly interruptions
+        [ -f "${monthly_interruptions}" ] && yq e -C "${monthly_interruptions}" || echo "No interruption this month!"
+        ;;
+    list|ls|l)      # list existing pomo sessions already giving the command for more details
+        limit=${2:-20}
+        echo "Print last ${limit}"
+        pomo::files "${limit}" | xargs -L 1 basename | cut -b 6-13 | xargs -I {} echo "pomo p {}"
+        ;;
+    start)          # start new pomodoro session stopping automatically at the 4th round
+        pomo_pid=$(pomo::stats)
+        if [ -n "${pomo_pid}" ];then
+            echo "There is already a pomo session running, stop it first!"
+            exit 1
+        fi
+        echo "type fg and ctrl+c to STOP!"
+        pomo::start_round &
+        ;;
+    skip)           # jump to next session/finish current session
+        pomo_pid=$(pomo::stats sleep)
+        if [ -z "${pomo_pid}" ];then
+            echo "No pomo is running now"
+            exit 1
+        fi
+        kill "${pomo_pid}" &> /dev/null
+        sleep 0.5
+        kill "$(pomo::stats sleep)" &> /dev/null
+        ;;
+    stats|s)        # print todays pomo stats
+        pomo_pid=$(pomo::stats)
+        if [ -z "${pomo_pid}" ];then
+            echo "No pomo is running now"
+            exit 1
+        fi
+        pomo::stats_details
+        ;;
+    stop|kill)      # kills pomo proccess stopping it for today
+        pomo_pid=$(pomo::stats)
+        if [ -z "${pomo_pid}" ];then
+            echo "No pomo is running now"
+            exit 1
+        fi
+        children_pomo_pid=$(pgrep -P "${pomo_pid}")
+        echo "Run above to kill pomo pid ${children_pomo_pid}"
+        kill "${pomo_pid}"
+        kill "${children_pomo_pid}" > /dev/null
+        ;;
+    description|d)  # add description to the current pomo
+        description="${*: 2}"
+        if [ -z "${description}" ];then
+            echo "Missing description!"
+            exit 1
+        fi
+        if ! [ -f "${today_pomo}" ] || tail -1 "${today_pomo}" | grep description &>/dev/null; then
+            echo "There is no pomo file or there is already an description for this pomo!"
+            exit 1
+        fi
+        echo "    description: ${*}" >> "${today_pomo}"
+        ;;
+    -[0-9]*)
+        $0 p "$1"
+        ;;
+    print|p|'')     # prints the current pomo session; pass -1..x to print past sessions
+        today_pomo=$(pomo::file "$2")
+        [ -f "${today_pomo}" ] && yq e -C "${today_pomo}" || echo "No pomo yet!"
+        ;;
+    help|*)         # prints help
+        cat <<-HELP | sed -r 's/^ {8}//'
+        Usage: pomo [action] [arg]
+        
+        Commands:
+        $(grep ') *#' "${BASH_SOURCE:0}" | grep -v grep | sed 's/)//')
+
+        Ex:
+            pomo d my task  # add description to the running round
+            pomo p 20200326 # prints the given pomo session - date id
+HELP
+        ;;
+esac
