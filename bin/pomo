@@ -3,6 +3,9 @@
 #################################
 [ -d ~/.pomo ] || mkdir -p ~/.pomo
 
+esc=$(printf '\033')
+RESET="${esc}[0m"
+
 function pomo::file(){
     local -r t=${1:-$(date +%Y%m%d)}
     if [ "${t:0:1}" = "-" ]; then
@@ -30,10 +33,18 @@ function pomo::stats(){
     pgrep -P "$root"
 }
 
-function pomo::stats_details(){
-    cat <<-STAT | sed -r 's/^ {4}//'
-    Pomo is running...
+function pomo::fail(){
+    echo "${esc}[31mERROR: ${*}$RESET" >&2
+    exit 1
+}
 
+function pomo::stats_details(){
+    echo Pomo is running...
+    if ! [ -f "${today_pomo}" ];then
+        pomo::fail "But it seems to be from another day since today's file doesn't exist. Please stop it to start again."
+    fi
+    cat <<-STAT | sed -r 's/^ {4}//'
+    
     [Total]
     Sessions:   $(grep -c '\- round ' "$today_pomo")
     Pomos:      $(grep -c '\- start:' "$today_pomo")
@@ -69,10 +80,10 @@ function pomo::start_round(){
     fi
     echo "Starting new round ${round}"
     echo "- round $(date +%H:%M):" >> "${today_pomo}"
-    pomo::start_15 short "${today_pomo}"
-    pomo::start_15 short "${today_pomo}"
-    pomo::start_15 short "${today_pomo}"
-    pomo::start_15 LONG "${today_pomo}" 15
+    pomo::start_session short "${today_pomo}"
+    pomo::start_session short "${today_pomo}"
+    pomo::start_session short "${today_pomo}"
+    pomo::start_session LONG "${today_pomo}" 15
     # 8h of work, 4 rounds is more then enough
     if [ "${round}" -gt 4 ];then
         pomo::notification "Last round, stopping..." alert Sosumi
@@ -82,18 +93,21 @@ function pomo::start_round(){
     pomo::start_round ${round}
 }
 
-function pomo::start_15(){
+function pomo::start_session(){
     date::guard
     local -r break_type=$1
     local -r today_pomo=$2
     local -r break_time=${3:-5}
     local -r start=$(date::now)
 
-    echo "  - start: ${start}" >> "${today_pomo}"
-    pomo::session 25 work "New pomo starting ${start}" alert
+    function pomo::start_session::callback() {
+        date::guard
+        echo "  - start: $(date::now)" >> "${today_pomo}"
+    }
+    pomo::session 25 work "New pomo starting ${start}" alert pomo::start_session::callback
     echo "    done: $(date::now)" >> "${today_pomo}"
 
-    pomo::session "${break_time}" "break" "Pomo done, take a ${break_type} break" alert
+    pomo::session "${break_time}" "break" "Pomo done, take a ${break_type} break" alert date::guard
 }
 
 function pomo::est(){
@@ -109,9 +123,11 @@ function pomo::session(){
     local -r ctx=$2
     local -r msg=$3
     local -r act=${4}
+    local -r call_back=${5}
 
     local -r est=$(pomo::est "${duration}")
     pomo::notification "${msg} - ${duration} minutes duration - est ${est}" "${act}" Glass
+    ${call_back}
 
     pomo::sleep "${duration_secs}" $((duration_secs-25))
     pomo::notification "25 secs to finish ${ctx} - est ${est}"
@@ -135,9 +151,8 @@ function date::guard() {
     fi
     local -r msg="It is now a new day[${current_date}], stopping ${start_date} pomo session..."
     pomo::notification "${msg}" alert Sosumi &
-    echo "${msg}"
-    echo 'Existing pomo, Start a new one if you like with "pomo s"'
-    exit 1
+    pomo::fail "${msg}
+" # break extra line
 }
 
 function date::string(){
@@ -160,8 +175,7 @@ case "${action}" in
     interruption|i) # registry interruptions in current session; you can provide reason description
         echo "- $(date)" >>! "${monthly_interruptions}"
         if ! [ -f "${today_pomo}" ] || tail -1 "${today_pomo}" | grep interruption &>/dev/null; then
-            echo "There is no pomo file or there is already an interruption for this pomo!"
-            exit 1
+            pomo::fail "There is no pomo file or there is already an interruption for this pomo!"
         fi
         echo "    interruption: $(date::now)" >> "${today_pomo}"
         description="${*: 2}"
@@ -180,8 +194,7 @@ case "${action}" in
     start)          # start new pomodoro session stopping automatically at the 4th round
         pomo_pid=$(pomo::stats)
         if [ -n "${pomo_pid}" ];then
-            echo "There is already a pomo session running, stop it first!"
-            exit 1
+            pomo::fail "There is already a pomo session running, stop it first!"
         fi
         echo "type fg and ctrl+c to STOP!"
         pomo::start_round &
@@ -189,8 +202,7 @@ case "${action}" in
     skip)           # jump to next session/finish current session
         pomo_pid=$(pomo::stats sleep)
         if [ -z "${pomo_pid}" ];then
-            echo "No pomo is running now"
-            exit 1
+            pomo::fail "No pomo is running now"
         fi
         kill "${pomo_pid}" &> /dev/null
         sleep 0.5
@@ -199,16 +211,14 @@ case "${action}" in
     stats|s)        # print todays pomo stats
         pomo_pid=$(pomo::stats)
         if [ -z "${pomo_pid}" ];then
-            echo "No pomo is running now"
-            exit 1
+            pomo::fail "No pomo is running now"
         fi
         pomo::stats_details
         ;;
     stop|kill)      # kills pomo proccess stopping it for today
         pomo_pid=$(pomo::stats)
         if [ -z "${pomo_pid}" ];then
-            echo "No pomo is running now"
-            exit 1
+            pomo::fail "No pomo is running now"
         fi
         children_pomo_pid=$(pgrep -P "${pomo_pid}")
         echo "Run above to kill pomo pid ${children_pomo_pid}"
@@ -218,12 +228,10 @@ case "${action}" in
     description|d)  # add description to the current pomo
         description="${*: 2}"
         if [ -z "${description}" ];then
-            echo "Missing description!"
-            exit 1
+            pomo::fail "Missing description!"
         fi
         if ! [ -f "${today_pomo}" ] || tail -1 "${today_pomo}" | grep description &>/dev/null; then
-            echo "There is no pomo file or there is already an description for this pomo!"
-            exit 1
+            pomo::fail "There is no pomo file or there is already an description for this pomo!"
         fi
         echo "    description: ${*}" >> "${today_pomo}"
         ;;
@@ -234,7 +242,7 @@ case "${action}" in
         today_pomo=$(pomo::file "$2")
         [ -f "${today_pomo}" ] && yq e -C "${today_pomo}" || echo "No pomo yet!"
         ;;
-    help|*)         # prints help
+    help)           # prints help
         cat <<-HELP | sed -r 's/^ {8}//'
         Usage: pomo [action] [arg]
         
@@ -245,5 +253,9 @@ case "${action}" in
             pomo d my task  # add description to the running round
             pomo p 20200326 # prints the given pomo session - date id
 HELP
+        ;;
+    *)
+        $0 help
+        pomo::fail "invalid command: ${*:1}"
         ;;
 esac
