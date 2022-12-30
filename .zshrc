@@ -25,3 +25,6 @@ export EDITOR=vi
 export GOPATH=$(go env GOPATH)
 export GO111MODULE=on
 export GEM_HOME=$HOME/.gem
+export DOCKER_HOST=unix:///Users/alan.voiski/.colima/docker.sock
+
+# source /Users/alan.voiski/.rvm/scripts/rvm

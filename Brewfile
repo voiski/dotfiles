@@ -9,6 +9,7 @@ brew 'asdf'
 brew 'asciinema'
 brew 'awscli'
 brew 'bash' # Bash 4
+brew 'colima'
 brew 'coreutils' # Those that come with macOS are outdated
 brew 'ctop'
 brew 'ffmpeg'
@@ -51,6 +52,7 @@ brew 'yq'
 # Development
 brew 'openjdk'
 brew 'go'
+brew 'crystal'
 
 # Apps
 cask 'adobe-acrobat-reader'
@@ -59,7 +61,7 @@ cask 'caffeine'
 # cask 'chef/chef/chefdk'
 cask 'charles'
 cask 'clocker'
-cask 'docker' if system "ls ~/.personal_laptop"
+cask 'docker'
 # cask 'firefox'
 # cask 'free-ruler'
 cask 'goland' # go IDE
@@ -79,7 +81,7 @@ cask 'microsoft-excel' if system "ls ~/.personal_laptop"
 cask 'microsoft-word' if system "ls ~/.personal_laptop"
 cask 'notion'
 cask 'rancher' unless system "ls ~/.personal_laptop"  # free docker alternative
-cask 'rectangle'
+cask 'rectangle' # screen windows organize
 cask 'rescuetime'
 # cask 'shuttle' # Maybe in the future
 cask 'slack'
