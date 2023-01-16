@@ -76,6 +76,7 @@ function kill_grep(){ # kill using greep return
 }
 function restart_linux_cam(){ sudo rmmod -v uvcvideo && sudo modprobe -v uvcvideo; }
 alias restart_mac_cam='sudo killall VDCAssistant'
+alias restart_mac_bluetooth='sudo pkill bluetoothd'
 alias zreset='source ~/.zshrc'
 
 
