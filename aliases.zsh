@@ -91,6 +91,7 @@ alias mkdir='mkdir -pv'
 alias rm_dir='rm -Rf'
 alias webify='mogrify -resize 690\> *.png'
 alias wget='wget -c'
+alias brew-up-cask='for cask in $(brew list --cask); do brew upgrade --cask $cask || true; done;'
 alias brewv="curl -s https://gist.githubusercontent.com/voiski/973ec1fe0e4b05d52133c9d0438eb2de/raw//brewv.sh | bash -s"
 
 function load-rancher-tmp(){
