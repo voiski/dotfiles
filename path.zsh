@@ -2,12 +2,6 @@ path=(
 # My dots
 $HOME/.dotfiles/bin
 
-# Ruby
-$HOME/.gem/bin
-
-# ASDF shims
-$HOME/.asdf/shims
-
 # Load Node global installed binaries
 $HOME/.node/bin
 
