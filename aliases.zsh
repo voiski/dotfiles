@@ -94,10 +94,31 @@ alias wget='wget -c'
 alias brew-up-cask='for cask in $(brew list --cask); do brew upgrade --cask $cask || true; done;'
 alias brewv="curl -s https://gist.githubusercontent.com/voiski/973ec1fe0e4b05d52133c9d0438eb2de/raw//brewv.sh | bash -s"
 
-function load-rancher-tmp(){
-	export DOCKER_HOST_TMP=${HOME}/.rancher-desktop
-	[ -d $DOCKER_HOST_TMP ] || mkdir -p $DOCKER_HOST_TMP &> /dev/null
-	echo $DOCKER_HOST_TMP
+function tf-simple-plan(){ # usage: cmd | tf-simple-plan [g_back:1] or tf-simple-plan replay [g_back:1]
+  local g_back=${1:-1}
+  local replay=${2}
+  local cache_file=/tmp/tf-simple-plan.cache
+  # flip inputs
+  if [ "${g_back}" = 'replay' ]; then
+    g_back="${2:-1}"
+    replay='replay'
+  fi
+  # restore valid bck
+  if ! [ -s "${cache_file}" ] && [ -f "${cache_file}".bck ]; then
+    /bin/cp -f "${cache_file}".bck "${cache_file}"
+  fi
+  # Replay without grep
+  if [ "${g_back}" = clean  ]; then
+    cat "${cache_file}"
+    return
+  fi
+  # tee or replay
+  if [ "${replay}" = replay  ]
+  then cat "${cache_file}"
+  else
+    mv -f "${cache_file}" "${cache_file}".bck
+    tee "${cache_file}"
+  fi | grep -B "${g_back}" --color=never -Ei '# .* (must|will) be |1mPlan\:|\d\dm(-|\+|~)'
 }
 
 function bash-record-asciinema(){ # bash-record-asciinema cast_name no_override:optional
