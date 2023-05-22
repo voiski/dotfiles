@@ -5,6 +5,7 @@ tap 'homebrew/bundle'
 tap 'teamookla/speedtest'
 
 # Install Binaries
+brew 'agg' # asciicast to gif converter
 brew 'asdf'
 brew 'asciinema'
 brew 'awscli'

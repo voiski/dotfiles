@@ -119,31 +119,19 @@ function bash-play(){ # bash-play cast_name
 
 function bash-record(){ # bash-record final_gif_name speed:optional cast_file:optional
 	[ -z "$1" ] && echo "Usage: $0 <name>" && return 1
-	local cast_file=${3:-$(load-rancher-tmp)/$1.cast}
+	local cast_file=${3:-/tmp/$1.cast}
 	echo "Recording at: ${cast_file}"
 	(bash-record-asciinema $cast_file ${3} || [ $? = 215 ]) || return 1
-	time docker run --rm -v $(dirname $cast_file):/tmp -v $PWD:/data asciinema/asciicast2gif \
-		-s ${2:-10} \
-		-S 1 \
+	time agg \
+		--idle-time-limit 1 \
+		--fps-cap 5 \
+		--speed ${2:-10} \
+		--theme asciinema \
 		/tmp/$(basename $cast_file) "./$1.gif"
-	# https://www.robinstewart.com/blog/2018/10/adding-a-delay-to-the-end-of-an-animated-gif/
-	if command -v gifsicle &>/dev/null; then
-		rm -f $1-optimised.gif
-		gifsicle -U $1.gif "#0--2" -d100 "#-1" -O2 > $1-optimised.gif
-	fi
-}
-
-function bash-record-svg(){ # bash-record final_gif_name speed:optional cast_file:optional
-	[ -z "$1" ] && echo "Usage: $0 <name>" && return 1
-	local cast_file=${3:-$(load-rancher-tmp)/$1.cast}
-	(bash-record-asciinema $cast_file ${3} || [ $? = 215 ]) || return 1
-	time docker run --rm -v $(dirname $cast_file):/tmp -v $PWD:/data voiski/svg-term-cli \
-		--in "/tmp/$1.cast" --out "/data/$1.svg"
-		# Missing speed
 }
 
 function screen-record-gif(){ # screen-record-gif in.mov speed:optional scale:optional
-	[ -z "$1" ] && echo "Usage: $0 <mov name>" && return 1
+	[ -z "$1" ] && echo "Usage: $0 <mov name> [opt speed:10] [opt scale:600]" && return 1
 	local mov_file=$1
 	! [ -f "${mov_file}" ] && echo "Error: File ${mov_file} not found!" && return 1
 	local rate=${2:-10}
