@@ -11,6 +11,13 @@ if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
 fi
 
 # Customize to your needs...
+if type brew &>/dev/null; then
+  FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+
+  autoload -Uz compinit
+  compinit
+fi
+
 source $HOME/.dotfiles/path.zsh
 source $HOME/.dotfiles/hooks.zsh
 source $HOME/.dotfiles/aliases.zsh
