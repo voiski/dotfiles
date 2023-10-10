@@ -71,8 +71,16 @@ alias free='free -mt'
 alias psg='ps aux | grep -v grep | grep -i -e VSZ -e'
 alias ps_grep='ps aux | grep -v grep | grep'
 function kill_grep(){ # kill using greep return
-  ID_PROCESS=$(ps_grep $1|awk '{print $2}')
-  kill -9 $ID_PROCESS
+  ID_PROCESS=($(ps_grep $1|awk '{print $2}'))
+  if [ "$2" = '--all' ] || [ "${#ID_PROCESS[@]}" -eq 1 ];then
+    kill -9 "${ID_PROCESS}"
+    return
+  fi
+  echo "Found zero or more than one process! Please, filter more or use:
+  $0 $1 --all
+  "
+  ps_grep $1
+  return 1
 }
 function restart_linux_cam(){ sudo rmmod -v uvcvideo && sudo modprobe -v uvcvideo; }
 alias restart_mac_cam='sudo killall VDCAssistant'
