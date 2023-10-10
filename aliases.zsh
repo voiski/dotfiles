@@ -91,8 +91,22 @@ alias mkdir='mkdir -pv'
 alias rm_dir='rm -Rf'
 alias webify='mogrify -resize 690\> *.png'
 alias wget='wget -c'
-alias brew-up-cask='for cask in $(brew list --cask); do brew upgrade --cask $cask || echo "Failed $cask! Fix it and run brew-up-cask again!"; done;'
 alias brewv="curl -s https://gist.githubusercontent.com/voiski/973ec1fe0e4b05d52133c9d0438eb2de/raw//brewv.sh | bash -s"
+
+function brew-up-cask(){
+  local errors;
+  for cask in $(brew list --cask); do
+    if [[ "${1}" != "--all" ]] && [[ "${cask}" =~ font-source ]]
+      then echo "Skipping font package ${cask}! Use 'brew-up-cask --all' if you want to include it."
+    elif ! brew upgrade --cask ${cask}; then
+      echo "Failed ${cask}! Fix it 'brew install --force ${cask}' and run 'brew-up-cask' again!";
+      errors="${errors}\n\tbrew install --force ${cask}"
+    fi;
+  done
+  if [ -n "${errors}" ]
+    then echo "Some brew failed to upgrade! Use bellow command(s) to fix:${errors}"
+  fi
+}
 
 function tf-simple-plan(){ # usage: cmd | tf-simple-plan [g_back:1] or tf-simple-plan replay [g_back:1]
   local g_back=${1:-1}
