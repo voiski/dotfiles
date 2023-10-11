@@ -17,6 +17,7 @@ brew 'ffmpeg'
 brew 'gettext'
 brew 'gifsicle'
 brew 'git'
+brew 'git-filter-repo'
 brew 'gitlab-runner' unless system "ls ~/.personal_laptop"
 brew 'graphviz'
 brew 'grep'
@@ -62,10 +63,11 @@ cask 'caffeine'
 # cask 'chef/chef/chefdk'
 cask 'charles'
 cask 'clocker'
+cask 'cleanmymac'
 cask 'docker'
 # cask 'firefox'
 # cask 'free-ruler'
-cask 'goland' # go IDE
+# cask 'goland' # go IDE
 # cask 'google-backup-and-sync'
 cask 'google-chrome'
 cask 'gpg-suite'
@@ -80,9 +82,8 @@ cask 'meld' # git mergetool
 cask 'microsoft-excel' if system "ls ~/.personal_laptop"
 # cask 'microsoft-remote-desktop-beta'
 cask 'microsoft-word' if system "ls ~/.personal_laptop"
-cask 'notion'
+# cask 'notion' # better use the web version
 cask 'orbstack' # docker desktop/colima alternative
-cask 'rancher' unless system "ls ~/.personal_laptop"  # free docker alternative
 cask 'rectangle' # screen windows organize
 cask 'rescuetime'
 # cask 'shuttle' # Maybe in the future
