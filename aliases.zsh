@@ -85,6 +85,7 @@ function kill_grep(){ # kill using greep return
 function restart_linux_cam(){ sudo rmmod -v uvcvideo && sudo modprobe -v uvcvideo; }
 alias restart_mac_cam='sudo killall VDCAssistant'
 alias restart_mac_bluetooth='sudo pkill bluetoothd'
+alias restart_dns='sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder'
 alias zreset='source ~/.zshrc'
 
 
@@ -118,29 +119,56 @@ function brew-up-cask(){
 
 function tf-simple-plan(){ # usage: cmd | tf-simple-plan [g_back:1] or tf-simple-plan replay [g_back:1]
   local g_back=${1:-1}
-  local replay=${2}
-  local cache_file=/tmp/tf-simple-plan.cache
-  # flip inputs
-  if [ "${g_back}" = 'replay' ]; then
-    g_back="${2:-1}"
-    replay='replay'
+  local action=${2:-filter}
+  local -r cache_file=/tmp/tf-simple-plan.cache
+  # help function
+  if [ "${g_back}" = 'help' ]; then
+    echo "cmd: tf-simple-plan [cmd] [opts]
+    opts:
+      [g_back:1]                        # show more data before the change; useful to get more from the resource
+
+    actions:
+      *filter [g_back:1]                # default action, only works on stream
+      replay  [g_back:1]                # replay cached plan
+      clean                             # replay cached plan without filtering
+      summary                           # summary cached plan
+
+    Usage:
+      terraform plan | tf-simple-plan 2 # stream plan output filtering and caching
+      tf-simple-plan replay             # filter cached plan
+      tf-simple-plan summary            # show summary from cached plan
+    "
+    return
   fi
+  # flip inputs when g_back not num
+  case "${g_back}" in
+    [!0-9]*)
+      action="${g_back}"
+      g_back="${2:-1}"
+    ;;
+  esac
   # restore valid bck
   if ! [ -s "${cache_file}" ] && [ -f "${cache_file}".bck ]; then
     /bin/cp -f "${cache_file}".bck "${cache_file}"
   fi
-  # Replay without grep
-  if [ "${g_back}" = clean  ]; then
-    cat "${cache_file}"
-    return
-  fi
-  # tee or replay
-  if [ "${replay}" = replay  ]
-  then cat "${cache_file}"
-  else
-    mv -f "${cache_file}" "${cache_file}".bck
-    tee "${cache_file}"
-  fi | grep -B "${g_back}" --color=never -Ei '# .* (must|will) be |1mPlan\:|\d\dm(-|\+|~)'
+  # actions
+  case "${action}" in
+    clean)   cat "${cache_file}";;
+    summary) cat "${cache_file}" | grep --color=never -Ei '# .* (must be|will be|has moved to) |\d\dmNote|──────────────────';;
+    filter|replay)
+      # tee or replay
+      if [ "${action}" = replay ]
+        then cat "${cache_file}"
+      else
+        mv -f "${cache_file}" "${cache_file}".bck
+        tee "${cache_file}"
+      fi | grep -B "${g_back}" --color=never -Ei '# .* (must be|will be|has moved to) |1mPlan\:|\d\dm(-|\+|~|<|Note)|──────────────────'
+      ;;
+    *)
+      echo "invalid command and options ${*}"
+      return 1
+      ;;
+  esac
 }
 
 function bash-record-asciinema(){ # bash-record-asciinema cast_name no_override:optional
