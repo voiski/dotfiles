@@ -25,6 +25,7 @@ brew 'grpcurl'
 brew 'hub'
 brew 'jpegoptim'
 brew 'jq'
+brew 'just' # new makefile
 brew 'kubernetes-cli'
 brew 'helm'
 brew 'libusb' # required to identify id-token
