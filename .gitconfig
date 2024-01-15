@@ -33,12 +33,13 @@
     echo Delete ${currentBranch}?[y]; \
     read option; \
     if [ ${option} = 'y' ]; then \
-      git checkout $(git branch-default) && \
+      local -r target=${1:-$(git branch-default)}; \
+      git checkout ${target} && \
       git fetch --all --prune && \
       git pull && \
       git branch -D ${currentBranch}; \
     fi; \
-  }; f #"
+  }; f"
 
   # Push to updstream
   branch-push="!git push --set-upstream origin $(git branch-current) #"
