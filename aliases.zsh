@@ -73,7 +73,7 @@ alias ps_grep='ps aux | grep -v grep | grep'
 function kill_grep(){ # kill using greep return
   ID_PROCESS=($(ps_grep $1|awk '{print $2}'))
   if [ "$2" = '--all' ] || [ "${#ID_PROCESS[@]}" -eq 1 ];then
-    kill -9 "${ID_PROCESS}"
+    kill -9 ${ID_PROCESS}
     return
   fi
   echo "Found zero or more than one process! Please, filter more or use:
