@@ -2,8 +2,12 @@
 load-asdf() {
   local asdfrc_path=".tool-versions"
 
-  if [ -f "$asdfrc_path" ]; then
-    asdf install
+  if [[ $PWD == *.terragrunt-cache* ]]
+    then return
+  fi
+
+  if [ -f "$asdfrc_path" ]
+    then asdf install
   fi
 }
 add-zsh-hook chpwd load-asdf
