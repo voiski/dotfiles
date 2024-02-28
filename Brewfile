@@ -79,6 +79,7 @@ cask 'iterm2'
 cask 'intellij-idea-ce' # If you don't have license
 # cask 'intellij-idea' # if you have license =D
 cask 'lens' # kube IDE
+cask 'loom' # Screen recorder for training
 cask 'meld' # git mergetool
 cask 'microsoft-excel' if system "ls ~/.personal_laptop"
 # cask 'microsoft-remote-desktop-beta'
