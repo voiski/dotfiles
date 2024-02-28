@@ -209,9 +209,21 @@ action=$1
 today_pomo=$(file::get)
 monthly_interruptions=~/.pomo/interruptions_$(date +%Y%m_%B).yml
 case "${action}" in
-    edit|e)         # edit the current pomodoro session; pass -1..x to edit past sessions
-        today_pomo=$(file::get "$2")
-        eval "${VISUAL} ${today_pomo}"
+    start)          # start new pomodoro session stopping automatically at the 4th round
+        pomo_pid=$(stats::process)
+        if [ -n "${pomo_pid}" ];then
+            notify::fail "There is already a pomo session running, stop it first!"
+        fi
+        echo 'type fg and ctrl+c to STOP! Or use "pomo stop" command.'
+        round::start &
+        ;;
+    description|d)  # add description to the current pomo
+        description="${*: 2}"
+        if [ -z "${description}" ];then
+            notify::fail "Missing description!"
+        fi
+        validate::duplication description
+        echo "    description: ${*}" >> "${today_pomo}"
         ;;
     interruption|i) # registry interruptions in current session; you can provide reason description
         validate::duplication interruption
@@ -222,21 +234,9 @@ case "${action}" in
         fi
         echo "- $(date)" >> "${monthly_interruptions}"
         ;;
-    interruptions)  # print monthly interruptions
-        [ -f "${monthly_interruptions}" ] && yq e -C "${monthly_interruptions}" || echo "No interruption this month!"
-        ;;
-    list|ls|l)      # list existing pomo sessions already giving the command for more details
-        limit=${2:-20}
-        echo "Print last ${limit}"
-        files::list "${limit}" | xargs -L 1 basename | cut -b 6-13 | xargs -I {} echo "pomo p {}"
-        ;;
-    start)          # start new pomodoro session stopping automatically at the 4th round
-        pomo_pid=$(stats::process)
-        if [ -n "${pomo_pid}" ];then
-            notify::fail "There is already a pomo session running, stop it first!"
-        fi
-        echo "type fg and ctrl+c to STOP!"
-        round::start &
+    stats|s)        # print todays pomo stats
+        validate::pomo_runnig
+        stats::details
         ;;
     skip)           # jump to next session/finish current session
         validate::pomo_runnig
@@ -244,10 +244,6 @@ case "${action}" in
         kill "${pomo_pid}" &> /dev/null
         sleep 0.5
         kill "$(stats::process sleep)" &> /dev/null
-        ;;
-    stats|s)        # print todays pomo stats
-        validate::pomo_runnig
-        stats::details
         ;;
     stop|kill)      # kills pomo proccess stopping it for today
         validate::pomo_runnig
@@ -261,22 +257,26 @@ case "${action}" in
         echo "Stopping round sleep ${children_pomo_pid}"
         kill "${children_pomo_pid}" > /dev/null
         ;;
-    description|d)  # add description to the current pomo
-        description="${*: 2}"
-        if [ -z "${description}" ];then
-            notify::fail "Missing description!"
-        fi
-        validate::duplication description
-        echo "    description: ${*}" >> "${today_pomo}"
-        ;;
-    -[0-9]*)
-        $0 p "$1"
-        ;;
     print|p|'')     # prints the current pomo session; pass -1..x to print past sessions
         today_pomo=$(file::get "$2")
         [ -f "${today_pomo}" ] && yq e -C "${today_pomo}" || echo "No pomo yet!"
         ;;
-    help)           # prints help
+    -[0-9]*)
+        $0 p "$1"
+        ;;
+    list|ls|l)      # list existing pomo sessions already giving the command for more details
+        limit=${2:-20}
+        echo "Print last ${limit}"
+        files::list "${limit}" | xargs -L 1 basename | cut -b 6-13 | xargs -I {} echo "pomo p {}"
+        ;;
+    interruptions)  # print monthly interruptions
+        [ -f "${monthly_interruptions}" ] && yq e -C "${monthly_interruptions}" || echo "No interruption this month!"
+        ;;
+    edit|e)         # edit the current pomodoro session; pass -1..x to edit past sessions
+        today_pomo=$(file::get "$2")
+        eval "${VISUAL} ${today_pomo}"
+        ;;
+    help|h)         # prints help
         cat <<-HELP | sed -r 's/^ {8}//'
         Usage: pomo [action] [arg]
         
