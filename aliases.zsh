@@ -162,9 +162,15 @@ function tf-simple-plan(){ # usage: cmd | tf-simple-plan [g_back:1] or tf-simple
     local -r clr_eol=$(tput el)
     local -r marks=( '⠋' '⠙' '⠹' '⠸' '⠼' '⠴' '⠦' '⠧' '⠇' '⠏' ) # spinner
     local i=0
-    while read -r line; do
-			echo -ne "\r${clr_eol}${marks[i++ % ${#marks[@]}]} $(echo -ne "${line}" | expand | cut -c-$((COLUMNS-3)))'"
+    local jump=false
+    while IFS= read -r line; do
       echo "${line}" >> "${cache_file}"
+      if "$jump"
+        then continue
+      elif [[ "${line}" =~ "Resource actions are indicated" ]]
+        then jump=true
+      fi
+      echo -ne "\r${clr_eol}${marks[i++ % ${#marks[@]}]} $(echo -ne "${line}" | expand | cut -c-$((COLUMNS-3)))'"
     done
     printf "\r\r"
   fi
