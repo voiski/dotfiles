@@ -121,6 +121,7 @@ function tf-simple-plan(){ # usage: cmd | tf-simple-plan [g_back:1] or tf-simple
   local g_back=${1:-1}
   local action=${2:-filter}
   local -r cache_file=/tmp/tf-simple-plan.cache
+
   # help function
   if [ "${g_back}" = 'help' ]; then
     echo "cmd: tf-simple-plan [cmd] [opts]
@@ -140,6 +141,7 @@ function tf-simple-plan(){ # usage: cmd | tf-simple-plan [g_back:1] or tf-simple
     "
     return
   fi
+
   # flip inputs when g_back not num
   case "${g_back}" in
     [!0-9]*)
@@ -147,22 +149,31 @@ function tf-simple-plan(){ # usage: cmd | tf-simple-plan [g_back:1] or tf-simple
       g_back="${2:-1}"
     ;;
   esac
+
   # restore valid bck
   if ! [ -s "${cache_file}" ] && [ -f "${cache_file}".bck ]; then
     /bin/cp -f "${cache_file}".bck "${cache_file}"
   fi
+
   # actions
   case "${action}" in
     clean)   cat "${cache_file}";;
-    summary) cat "${cache_file}" | grep --color=never -Ei '# .* (must be|will be|has moved to) |\d\dmNote|──────────────────';;
+    summary) cat "${cache_file}" | grep --color=never -Ei '# .* (must be|will be|has moved to) |\d\dmNote|No changes\.|──────────────────';;
     filter|replay)
-      # tee or replay
-      if [ "${action}" = replay ]
-        then cat "${cache_file}"
-      else
+      # filter should cache first
+      if [ "${action}" = filter ]; then
         mv -f "${cache_file}" "${cache_file}".bck
-        tee "${cache_file}"
-      fi | grep -B "${g_back}" --color=never -Ei '# .* (must be|will be|has moved to) |1mPlan\:|\d\dm(-|\+|~|<|Note)|──────────────────'
+        touch "${cache_file}"
+        local -r clr_eol=$(tput el)
+        local -r marks=( '⠋' '⠙' '⠹' '⠸' '⠼' '⠴' '⠦' '⠧' '⠇' '⠏' ) # spinner
+        local i=0
+        while read -r line; do
+          echo -ne "\r${clr_eol}${marks[i++ % ${#marks[@]}]} $(echo "${line}" | expand | cut -c-$((COLUMNS)))..."
+          echo "${line}" >> "${cache_file}"
+        done
+        printf "\r\r"
+      fi
+      cat "${cache_file}" | grep -B "${g_back}" --color=never -Ei '# .* (must be|will be|has moved to) |1mPlan\:|\d\dm(-|\+|~|<|Note)|No changes\.|──────────────────'
       ;;
     *)
       echo "invalid command and options ${*}"
