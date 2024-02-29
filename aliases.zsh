@@ -155,28 +155,36 @@ function tf-simple-plan(){ # usage: cmd | tf-simple-plan [g_back:1] or tf-simple
     /bin/cp -f "${cache_file}".bck "${cache_file}"
   fi
 
+  # handle the stdin
+  if ! [ -t 0 ]; then
+    mv -f "${cache_file}" "${cache_file}".bck
+    touch "${cache_file}"
+    local -r clr_eol=$(tput el)
+    local -r marks=( '⠋' '⠙' '⠹' '⠸' '⠼' '⠴' '⠦' '⠧' '⠇' '⠏' ) # spinner
+    local i=0
+    while read -r line; do
+			echo -ne "\r${clr_eol}${marks[i++ % ${#marks[@]}]} $(echo -ne "${line}" | expand | cut -c-$((COLUMNS-3)))'"
+      echo "${line}" >> "${cache_file}"
+    done
+    printf "\r\r"
+  fi
+
   # actions
   case "${action}" in
-    clean)   cat "${cache_file}";;
-    summary) cat "${cache_file}" | grep --color=never -Ei '# .* (must be|will be|has moved to) |\d\dmNote|No changes\.|──────────────────';;
+    clean)
+      cat "${cache_file}"
+      ;;
+    summary)
+      cat "${cache_file}" | grep --color=never -Ei '# .* (must be|will be|has moved to) |\d\dmNote|No changes\.|──────────────────'
+      [ -t 0 ] || echo "try using 'tf-simple-plan replay' without pipe to see the plan!"
+      ;;
     filter|replay)
-      # filter should cache first
-      if [ "${action}" = filter ]; then
-        mv -f "${cache_file}" "${cache_file}".bck
-        touch "${cache_file}"
-        local -r clr_eol=$(tput el)
-        local -r marks=( '⠋' '⠙' '⠹' '⠸' '⠼' '⠴' '⠦' '⠧' '⠇' '⠏' ) # spinner
-        local i=0
-        while read -r line; do
-          echo -ne "\r${clr_eol}${marks[i++ % ${#marks[@]}]} $(echo "${line}" | expand | cut -c-$((COLUMNS)))..."
-          echo "${line}" >> "${cache_file}"
-        done
-        printf "\r\r"
-      fi
       cat "${cache_file}" | grep -B "${g_back}" --color=never -Ei '# .* (must be|will be|has moved to) |1mPlan\:|\d\dm(-|\+|~|<|Note)|No changes\.|──────────────────'
+      [ -t 0 ] || echo "Suggestion: try 'tf-simple-plan summary'!"
       ;;
     *)
       echo "invalid command and options ${*}"
+      [ -t 0 ] || echo "The tf plan was cached, try using 'tf-simple-plan replay' without pipe to see the plan!"
       return 1
       ;;
   esac
