@@ -33,10 +33,10 @@
     echo Delete ${currentBranch}?[y]; \
     read option; \
     if [ ${option} = 'y' ]; then \
-      local -r target=${1:-$(git branch-default)}; \
-      git checkout ${target} && \
+      local -r target=${1:-origin/$(git branch-default)}; \
       git fetch --all --prune && \
-      git pull && \
+      git checkout ${target} && \
+      ( [[ "${target}" = "origin/"* ]] || git pull) && \
       git branch -D ${currentBranch}; \
     fi; \
   }; f"
