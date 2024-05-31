@@ -1,0 +1,140 @@
+#!/bin/bash -e
+# tf-simple-plan
+#################################
+# usage: cmd | tf-simple-plan [g_back:1] or tf-simple-plan replay [g_back:1]
+
+# constants
+CLR_EOL=$(tput el)
+MARKS=( '⠋' '⠙' '⠹' '⠸' '⠼' '⠴' '⠦' '⠧' '⠇' '⠏' ) # spinner
+CACHE_FILE=/tmp/tf-simple-plan.cache
+CHECK_FILE=/tmp/tf-simple-plan.check
+
+# inputs
+action=${1:-filter}
+g_back=${2:-1}
+
+# help action
+if [ "${g_back}" = 'help' ]; then
+echo "cmd: tf-simple-plan [cmd] [opts]
+opts:
+    [g_back:1]                        # show more data before the change; useful to get more from the resource
+
+actions:
+    *filter [g_back:1]                # default action, only works on stream
+    replay  [g_back:1]                # replay cached plan
+    clean                             # replay cached plan without filtering
+    summary                           # summary cached plan
+    check \$task                      # check task and remove it from the cache replay
+
+Usage:
+    terraform plan | tf-simple-plan 2 # stream plan output filtering and caching
+    tf-simple-plan replay             # filter cached plan
+    tf-simple-plan summary            # show summary from cached plan
+"
+return
+fi
+
+# flip inputs when g_back not num
+case "${action}" in
+[0-9]*)
+    g_back="${action}"
+    action="${2:-filter}"
+;;
+esac
+
+# restore valid bck
+if ! [ -s "${CACHE_FILE}" ] && [ -f "${CACHE_FILE}".bck ]; then
+/bin/cp -f "${CACHE_FILE}".bck "${CACHE_FILE}"
+/bin/cp -f "${CHECK_FILE}".bck "${CHECK_FILE}"
+fi
+
+# handle the stdin
+if ! [ -t 0 ]; then
+mv -f "${CACHE_FILE}" "${CACHE_FILE}".bck
+mv -f "${CHECK_FILE}" "${CHECK_FILE}".bck
+touch "${CACHE_FILE}"
+touch "${CHECK_FILE}"
+i=0
+jump=false
+while IFS= read -r line; do
+    echo "${line}" >> "${CACHE_FILE}"
+    if "$jump"
+    then continue
+    elif [[ "${line}" =~ "Resource actions are indicated" ]]
+    then jump=true
+    fi
+    echo -ne "\r${CLR_EOL}${MARKS[i++ % ${#MARKS[@]}]} $(echo -ne "${line}" | expand | cut -c-$((COLUMNS-3)))'"
+done
+printf "\r\r"
+fi
+
+# Check tasks is marked as done
+checked_tasks=($(cat "${CHECK_FILE}")) || true
+function check_task() {
+    local task="${1}"
+    for checked_task in "${checked_tasks[@]}"; do
+        if [[ "${task}" =~ ${checked_task} ]]; then
+            return 0
+        fi
+    done
+    return 1
+}
+
+# actions
+case "${action}" in
+clean)
+    cat "${CACHE_FILE}"
+    ;;
+summary)
+    grep --color=never -Ei \
+        '# .* (must be|will be|has moved to) |\d\dmNote|No changes\.|──────────────────' \
+        "${CACHE_FILE}" \
+    | while read -r line; do
+        if check_task "${line}"
+        then printf "√ ";
+        fi
+        echo "${line}"
+    done
+    [ -t 0 ] || echo "try using 'tf-simple-plan replay' without pipe to see the plan!"
+    ;;
+filter|replay)
+    skip_flag=false
+    grep -B "${g_back}" --color=never -Ei \
+        '# .* (must be|will be|has moved to) |1mPlan\:|\d\dm(-|\+|~|<|Note)|No changes\.|──────────────────' \
+        "${CACHE_FILE}" \
+    | while IFS="";read -r line; do
+        # skip task block
+        if ${skip_flag} && [[ "${line}" =~ (1mPlan|\ \ #\ [^\(]).* ]]
+        then skip_flag=false
+        elif ${skip_flag}
+        then continue;
+        fi
+        # check task is marked as done
+        if check_task "${line}";then
+            echo "√${line}";
+            skip_flag=true;
+            continue;
+        fi
+
+        echo "${line}"
+    done
+    [ -t 0 ] || echo "Suggestion: try 'tf-simple-plan summary'!"
+    ;;
+check)
+    if [ -z "${2}" ]; then
+        echo "task is required!"
+        exit 1
+    fi
+    shift;
+    for task in "${@}"; do
+        task="$(echo "${task}" | sed 's/[^a-zA-Z0-9]/\\&/g')"
+        grep --color=never "# ${task}" "${CACHE_FILE}"
+        grep "${task}" "${CHECK_FILE}" > /dev/null || echo "${task}" >> "${CHECK_FILE}"
+    done
+    ;;
+*)
+    echo "invalid command and options ${*}"
+    [ -t 0 ] || echo "The tf plan was cached, try using 'tf-simple-plan replay' without pipe to see the plan!"
+    exit 1
+    ;;
+esac
