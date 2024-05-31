@@ -31,7 +31,6 @@ export EDITOR=vi
 
 export GOPATH=$(go env GOPATH)
 export GO111MODULE=on
-export DOCKER_HOST=unix:///Users/alan.voiski/.colima/docker.sock
 
 # source /Users/alan.voiski/.rvm/scripts/rvm
 . $(brew --prefix)/opt/asdf/libexec/asdf.sh
