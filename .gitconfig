@@ -21,7 +21,12 @@
   }; f #"
 
   # Retrieve default branch - expect main
-  branch-default = "!git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'"
+  branch-default = "!f(){ \
+    if [[ $1 == 'long' ]]; \
+    then git symbolic-ref refs/remotes/origin/HEAD; \
+    else git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'; \
+    fi; \
+  }; f"
 
   # Remove branches that have already been mergeith main
   # a.k.a. ‘delete merged’
@@ -43,6 +48,48 @@
 
   # Push to updstream
   branch-push="!git push --set-upstream origin $(git branch-current) #"
+
+  # Branches by its last update
+  branch-report="!git for-each-ref --sort=committerdate \
+    --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(color:red)%(objectname:short)%(color:reset) - %(contents:subject) - %(authorname) (%(color:green)%(committerdate:relative)%(color:reset))' #"
+  
+  # Table of branches by its last update
+  # https://stackoverflow.com/a/5188364/2985644
+  branch-report-fancy= "!f() { \
+    refbranch=$(git branch-default long) \
+    mode=--short \
+    limit=${2:-20} \
+    head='ahead|behind|branch|lastcommit\n' \
+    format='%(refname:short)|%(HEAD)%(color:yellow)%(refname:short)|%(color:bold green)%(committerdate:relative)%(color:reset)'; \
+    case ${1} in \
+      --full|--long) \
+        mode=$1; \
+        head='ahead|behind|branch|lastcommit|message|author\n'; \
+        format='%(refname:short)|%(HEAD)%(color:yellow)%(refname:short)|%(color:bold green)%(committerdate:relative)|%(color:blue)%(subject)|%(color:magenta)%(authorname)%(color:reset)'; \
+        ;; \
+      [1-9]*) limit=${1};; \
+      *) echo '> Also check for --full mode';; \
+    esac; \
+    echo \"Printing Mode/Limit ${mode}/${limit}\" ;\
+    git for-each-ref \
+      --sort=-committerdate \
+      --format=\"${format}\" \
+      --color=always \
+      --count=${limit} \
+    | while read line; do \
+      branch=$(\
+        echo \"$line\" \
+        | awk 'BEGIN { FS = \"|\" }; { print $1 }' \
+        | tr -d '*' \
+      ); \
+      ahead=$(git rev-list --count \"${refbranch}..${branch}\"); \
+      behind=$(git rev-list --count \"${branch}..${refbranch}\"); \
+      colorline=$(echo \"$line\" | sed 's/^[^|]*|//'); \
+      echo \"$ahead|$behind|$colorline\" | awk -F'|' -vOFS='|' '{$5=substr($5,1,70)}1' ; \
+      done \
+    | ( echo \"${head}\" && cat) \
+    | column -ts'|'; \
+  }; f"
 
   # Show verbose output
   branches = branch -a
