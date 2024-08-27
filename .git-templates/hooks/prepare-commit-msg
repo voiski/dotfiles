@@ -11,7 +11,7 @@ BRANCH_NAME="${BRANCH_NAME##*/}"
 if [ -n "$BRANCH_NAME" ] &&
    [ -z "$(head -1 ${COMMIT_MSG_FILE})" ]
 then
-  sed -i.bak -e "1s/^/\fix(${BRANCH_NAME}\): \n\
+  sed -i.bak -e "1s'^'\fix(${BRANCH_NAME}\): \n\
 # Please, use semantic release build|ci|docs|feat|fix|perf|refactor|test syntax.\n\
-# https://github.com/semantic-release/semantic-release?tab=readme-ov-file#commit-message-format/;" ${COMMIT_MSG_FILE}
+# https://github.com/semantic-release/semantic-release?tab=readme-ov-file#commit-message-format';" ${COMMIT_MSG_FILE}
 fi

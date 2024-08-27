@@ -145,7 +145,7 @@
   history = log --graph --full-history --all --color --pretty=format:"%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20%s"
 
   # Install pre commit message template in existing local repo
-  install-commit-template = !ln -s ~/.dotfiles/.git-templates/hooks/prepare-commit-msg .git/hooks/prepare-commit-msg
+  install-commit-template = !ln -fs ~/.dotfiles/.git-templates/hooks/prepare-commit-msg .git/hooks/prepare-commit-msg
 
   # View abbreviated SHA, description, and history graph of the latest 20 commits
   l = log --pretty=oneline -n 20 --graph --abbrev-commit
