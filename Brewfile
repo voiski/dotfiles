@@ -102,6 +102,7 @@ cask 'virtualbox'
 cask 'virtualbox-extension-pack'
 cask 'visual-studio-code'
 cask 'vlc'
+cask 'zed' # text editor
 cask 'zoom'
 # cask 'webex'
 cask 'whatsapp' if system "ls ~/.personal_laptop"
