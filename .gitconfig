@@ -50,14 +50,15 @@
   branch-push="!git push --set-upstream origin $(git branch-current) #"
 
   # Branches by its last update
-  branch-report="!git for-each-ref --sort=committerdate \
+  branch-report="!git for-each-ref --sort=committerdate --exclude='refs/tags/*' \
     --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(color:red)%(objectname:short)%(color:reset) - %(contents:subject) - %(authorname) (%(color:green)%(committerdate:relative)%(color:reset))' #"
 
   # Branches by its last update
   branch-report-older="!f(){\
     local -r range=${1:-6m}; \
-    git for-each-ref --sort=committerdate \
-      --format='%(authordate:format:%Y-%m-%d)  %(align:25,left)%(authorname)%(end) %(refname:strip=3)' \
+    git for-each-ref --sort=committerdate --exclude='refs/tags/*' \
+      --format='%(authordate:format:%Y-%m-%d)  %(align:25,left)%(authorname)%(end) [%(refname:strip=3)]' \
+    | grep -v '\\[\\]' \
     | awk \"{ \
       if (\\$1 < \\\"$(date -v -${range} +'%Y-%m-%d')\\\") { \
         print \\$0 \
@@ -85,6 +86,7 @@
     echo \"Printing Mode/Limit ${mode}/${limit}\" ;\
     git for-each-ref \
       --sort=-committerdate \
+      --exclude='refs/tags/*' \
       --format=\"${format}\" \
       --color=always \
       --count=${limit} \
