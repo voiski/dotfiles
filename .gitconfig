@@ -105,6 +105,9 @@
     | column -ts'|'; \
   }; f"
 
+  # Update branch with repo main branch
+  branch-update = !"git fetch-all && git rebase origin/$(git branch-default)"
+
   # Show verbose output
   branches = branch -a
 
@@ -125,6 +128,9 @@
 
   # `git di $number` shows the diff between the state `$number` revisions ago and the current state
   di = !"d() { git diff --patch-with-stat HEAD~$1; }; git diff-index --quiet HEAD -- || clear; d"
+
+  # Fetch all and prune
+  fetch-all = fetch --prune --tags --force origin
 
   # Find branches containing commit
   find-branch = fb
@@ -223,9 +229,6 @@
   # I like sourcetree, more then 'git gui'
   source="!/Applications/SourceTree.app/Contents/Resources/stree ."
 
-  # Show verbose output
-  tags = tag -l
-
   # list objts by size https://stackoverflow.com/a/42544963/2985644
   size = !"git rev-list --objects --all | \
   git cat-file --batch-check='%(objecttype) %(objectname) %(objectsize) %(rest)' | \
@@ -233,6 +236,9 @@
   sort --numeric-sort --key=2 | \
   cut -c 1-12,41- | \
   $(command -v gnumfmt || echo numfmt) --field=2 --to=iec-i --suffix=B --padding=7 --round=nearest"
+
+  # Show verbose output
+  tags = tag -l
 
 [apply]
 
