@@ -13,7 +13,9 @@ brew 'bash' # Bash 4
 brew 'colima'
 brew 'coreutils' # Those that come with macOS are outdated
 brew 'ctop'
+brew 'docker-compose'
 brew 'ffmpeg'
+brew 'fzf' # tool to search
 brew 'gettext'
 brew 'gifsicle'
 brew 'git'
@@ -79,6 +81,7 @@ cask 'iterm2'
 cask 'intellij-idea-ce' # If you don't have license
 # cask 'intellij-idea' # if you have license =D
 cask 'lens' # kube IDE
+cask 'k9s' # kubes manager
 cask 'kdiff3' # git mergetool- replace meld, check p4v
 cask 'loom' # Screen recorder for training
 # cask 'meld' # git mergetool

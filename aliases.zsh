@@ -305,18 +305,6 @@ function java_switch () { # Swith java version java_switch -v 1.7
   java -version
 }
 
-function kubectl_token() { # kubectl user credentials with OIDC
-  current_context=$(kubectl config current-context)
-	user_id=$(kubectl config view -o jsonpath="{.contexts[?(@.name == \"${current_context}\")].context.user}")
-	admin_user=$(kubectl config view -o jsonpath="{.users[?(@.name == \"${current_context}\")].user.username}")
-	admin_password=$(kubectl config view -o jsonpath="{.users[?(@.name == \"${current_context}\")].user.password}")
-	user_token=$(kubectl config view -o jsonpath="{.users[?(@.name == \"${user_id}\")].user.auth-provider.config.id-token}")
-  echo "Current context: $current_context
-  admin> user ${admin_user:-admin}: ${admin_password:-'n/a'}
-  OIDC> user ${user_id}: ${user_token}
-  "
-}
-
 function awstags(){ # get tags from ip
 	[ -z "$1" ] && echo "Usage: $0 <ip>" && return 1
 	local ip=$1
@@ -328,7 +316,6 @@ function awstags(){ # get tags from ip
 		| jq -r ".Reservations[0].Instances[0].Tags"
 }
 
-alias k="kubectl"
 
 function cheat(){ # cheat https://github.com/chubin/cheat.sh
 	local x=${@:2}
@@ -369,6 +356,65 @@ function g.c.redu2(){ # git revert commit 'x' versions: g.c.redu2 number_value
 function g.t.d(){ # git delete tag and push this tag
   git tag -d $1;git push origin :refs/tags/$1
 }
+
+#################################
+# K8s
+#################################
+
+function kubectl_token() { # kubectl user credentials with OIDC
+  current_context=$(kubectl config current-context)
+  user_id=$(kubectl config view -o jsonpath="{.contexts[?(@.name == \"${current_context}\")].context.user}")
+  admin_user=$(kubectl config view -o jsonpath="{.users[?(@.name == \"${current_context}\")].user.username}")
+  admin_password=$(kubectl config view -o jsonpath="{.users[?(@.name == \"${current_context}\")].user.password}")
+  user_token=$(kubectl config view -o jsonpath="{.users[?(@.name == \"${user_id}\")].user.auth-provider.config.id-token}")
+  echo "Current context: $current_context
+  admin> user ${admin_user:-admin}: ${admin_password:-'n/a'}
+  OIDC> user ${user_id}: ${user_token}
+  "
+}
+
+alias k="kubectl"
+
+function fz_podname() {
+  kubectl get pods $* -o json | jq -r '.items[].metadata.name' | fzf
+}
+
+function fz_deployment() {
+  kubectl get deployments $* -o json | jq -r '.items[].metadata.name' | fzf
+}
+
+function fz_namespace() {
+  kubectl get ns -o json | jq -r '.items[].metadata.name' | fzf
+}
+
+function fz_context() {
+  kubectl config get-contexts -o name 2>/dev/null | fzf
+}
+
+function kswitch_ns() { # Switch namespace in current context
+  kubectl config set-context --current --namespace $(fz_namespace)
+}
+
+function kswitch_ctx() { # Switch contexts
+  kubectl config use-context $(fz_context)
+}
+
+function kshell() { # Execute a shell (sh) in a pod
+  kubectl exec $* -it $(fz_podname $*) -- sh
+}
+
+function kbash() { # Execute a shell (bash) in a pod
+  kubectl exec $* -it $(fz_podname $*) -- bash
+}
+
+function klogs() { # Tail logs from a pod
+  kubectl logs $* -f $(fz_podname $*)
+}
+
+# You can also use the `fz_...` commands to build more functionality
+# kubectl describe deployment $(fz_deployment)
+# kubectl delete pod $(fz_podname)
+
 
 #################################
 # Run some script
