@@ -32,5 +32,4 @@ export EDITOR=vi
 export GOPATH=$(go env GOPATH)
 export GO111MODULE=on
 
-# source /Users/alan.voiski/.rvm/scripts/rvm
 . $(brew --prefix)/opt/asdf/libexec/asdf.sh

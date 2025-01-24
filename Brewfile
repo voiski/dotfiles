@@ -79,13 +79,15 @@ cask 'iterm2'
 cask 'intellij-idea-ce' # If you don't have license
 # cask 'intellij-idea' # if you have license =D
 cask 'lens' # kube IDE
+cask 'kdiff3' # git mergetool- replace meld, check p4v
 cask 'loom' # Screen recorder for training
-cask 'meld' # git mergetool
+# cask 'meld' # git mergetool
 cask 'microsoft-excel' if system "ls ~/.personal_laptop"
 # cask 'microsoft-remote-desktop-beta'
 cask 'microsoft-word' if system "ls ~/.personal_laptop"
 # cask 'notion' # better use the web version
 cask 'orbstack' # docker desktop/colima alternative
+cask 'p4v' # git mergetool- replace meld, check kdiff3
 cask 'rectangle' # screen windows organize
 cask 'rescuetime'
 # cask 'shuttle' # Maybe in the future

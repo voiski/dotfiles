@@ -307,21 +307,33 @@
 	# Include summaries of merged commits in newly created merge commit messages
 	log = true
 
-  # Use https://yousseb.github.io/meld/ for mergetool
-  tool = meld
+  tool = kdiff3
 
 [mergetool]
 
-  # Skip question, use meld
+  # Skip question, use kdiff3
   prompt = false
+  keepBackup = false
+  keepTemporaries = false
 
-[mergetool "meld"]
+# [mergetool "kdiff3"]
 
   # Skip meld exit code confirmation
-  trustExitCode = true
+  # trustExitCode = true
 
   # Config meld to properly get diff order
-  cmd = open -W -a Meld --args --auto-merge \"$(pwd)/$LOCAL\" \"$(pwd)/$BASE\" \"$(pwd)/$REMOTE\" --output=\"$(pwd)/$MERGED\"
+  # cmd = open -W -a Meld --args --auto-merge \"$(pwd)/$LOCAL\" \"$(pwd)/$BASE\" \"$(pwd)/$REMOTE\" --output=\"$(pwd)/$MERGED\"
+
+[diff]
+  tool = kdiff3
+
+[difftool]
+  prompt = false
+  keepBackup = false
+  trustExitCode = false
+
+# [difftool "kdiff3"]
+  # path
 
 [push]
 
