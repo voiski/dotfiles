@@ -36,7 +36,6 @@ brew 'minikube'
 # brew 'mackup'
 brew 'mas'
 brew 'p7zip'
-# brew 'packer'
 brew 'pngquant'
 brew 'speedtest'
 brew 'svn' # other brews depend on this one
@@ -50,66 +49,51 @@ brew 'wget'
 brew 'yamllint'
 brew 'yq'
 
-# Those are now default on mac
-# brew 'zsh'
-# brew 'zsh-completions'
-
 # Development
 brew 'openjdk'
 brew 'go'
-brew 'crystal'
+# brew 'crystal' # give up, not using for long now
 
 # Apps
-cask 'adobe-acrobat-reader'
+cask 'adobe-acrobat-reader' # still useful to fill PDFs
 # cask 'aerial' # awesome, but consume a lot of my HD
 cask 'caffeine'
-# cask 'chef/chef/chefdk'
-cask 'charles'
-cask 'clocker'
-cask 'cleanmymac'
+cask 'charles' unless system "ls ~/.personal_laptop"
+# cask 'cleanmymac' # giving some time before using it again
 cask 'docker'
-# cask 'firefox'
-# cask 'free-ruler'
-# cask 'goland' # go IDE
 # cask 'google-backup-and-sync'
 cask 'google-chrome'
 cask 'gpg-suite'
 cask 'gimp'
-cask 'grammarly'
+cask 'grammarly-desktop'
 # cask 'insomnia' # Like postman
 cask 'iterm2'
 cask 'intellij-idea-ce' # If you don't have license
 # cask 'intellij-idea' # if you have license =D
-cask 'lens' # kube IDE
+# cask 'lens' # kube IDE # payed, impossible to use now
 cask 'k9s' # kubes manager
 cask 'kdiff3' # git mergetool- replace meld, check p4v
-cask 'loom' # Screen recorder for training
-# cask 'meld' # git mergetool
-cask 'microsoft-excel' if system "ls ~/.personal_laptop"
+# cask 'loom' # Screen recorder for training
+# cask 'microsoft-excel' if system "ls ~/.personal_laptop"
 # cask 'microsoft-remote-desktop-beta'
-cask 'microsoft-word' if system "ls ~/.personal_laptop"
-# cask 'notion' # better use the web version
+# cask 'microsoft-word' if system "ls ~/.personal_laptop"
 cask 'orbstack' # docker desktop/colima alternative
 cask 'p4v' # git mergetool- replace meld, check kdiff3
 cask 'rectangle' # screen windows organize
 cask 'rescuetime'
 # cask 'shuttle' # Maybe in the future
 cask 'slack'
-cask 'sublime-text'
-# cask 'skype'
-cask 'sourcetree'
-# cask 'spin' # spinnaker cli
+cask 'sublime-text' # still the best lightweight IDE
+# cask 'sourcetree' # Too heavy, just use IDE's
 cask 'the-unarchiver' # finder rar support
 # cask 'transmit'
-cask 'vagrant'
-# cask 'vault'
+# cask 'vagrant' # not using
 cask 'virtualbox'
 cask 'virtualbox-extension-pack'
 cask 'visual-studio-code'
 cask 'vlc'
 cask 'zed' # text editor
 cask 'zoom'
-# cask 'webex'
 cask 'whatsapp' if system "ls ~/.personal_laptop"
 
 # Quicklook
